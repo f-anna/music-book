@@ -1,0 +1,3 @@
+[submodule "hosts/folioreader"]
+	path = hosts/folioreader
+	url = https://github.com/f-anna/folioreader-study-project
