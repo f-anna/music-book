@@ -1,0 +1,16 @@
+[package]
+name = "tauri-plugin-soundtrack"
+version = "0.1.0"
+authors = ["f-anna"]
+description = "Mood-tracking background music for e-book readers (Tauri v2 plugin)"
+edition = "2024"
+rust-version = "1.90"
+exclude = ["/guest-js", "/node_modules"]
+links = "tauri-plugin-soundtrack"
+
+[dependencies]
+tauri = "2"
+serde = { version = "1", features = ["derive"] }
+
+[build-dependencies]
+tauri-plugin = { version = "2", features = ["build"] }

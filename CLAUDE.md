@@ -12,19 +12,23 @@ Egyetemi projekt. Egy e-book olvasóhoz készülő funkció, amely az olvasott s
 ## Jelenlegi állapot
 
 - [x] FolioReader forkolva (`f-anna/folioreader-study-project`).
-- [x] Saját repó létrehozva (`music-book`, ág: `master`, még nincs első commit).
-- [x] A fork submodule-ként felvéve: `hosts/folioreader`.
-  - A stage-elt submodule-mutató még a régi `588f22a`-ra mutat, a kicsekkolt állapot viszont `7afb0e9` (a PR #1 merge-e). Az első commit előtt: `git add hosts/folioreader`.
-- [x] Gyökér `package.json` (npm workspaces: `packages/*`) és `.gitignore`.
+- [x] Saját repó létrehozva (`music-book`, ág: `master`, remote: `f-anna/music-book`). Első commit: `ef2bb5d`.
+- [x] A fork submodule-ként felvéve: `hosts/folioreader`, a mutató a fork `main`-jén lévő `4468c36`-ra (PR #3 merge) mutat.
+- [x] Gyökér `package.json` (npm workspaces: `packages/*`, `crates/tauri-plugin-soundtrack`) és `.gitignore`.
 - [x] **`packages/adapter-foliate`** kész: `createFoliateAdapter()` → `attach(view, bookSource)` / `detach()` + `ReaderAdapter` eventek. Részletek lent, az 1. mérföldkőnél.
-- [~] **A ReadingContext lecserélése a forkban** (ág: `replace-reading-context`, még nincs commitolva/PR-ezve):
+- [x] **A ReadingContext lecserélése a forkban** (PR #2, `replace-reading-context` → fork `main`, merge: `f352369`):
   - `src/context/ReadingContext.tsx` törölve, az `App.tsx`-ből a Provider kivéve. A `RequireAuth` wrapper a könyvtárnézet (`/`) elől **szándékosan ki van véve** (vele nem lehetett helyi könyvet megnyitni); a `/profile` route-on megmarad.
   - Új `src/soundtrack.ts`: az adapter példánya; DEV módban `console.debug`-ra írja az eseményeket (ez váltja a korábbi kiírást, később a plugin felé továbbít).
   - `vite.config.ts`: `server.forwardConsole` (`error`, `warn`, `debug`), így a WebView `console.debug` sorai (pl. `[soundtrack] location {...}`) a `npm run tauri dev` termináljában is megjelennek. Enélkül a Vite csak AI-ügynökből indítva továbbít, kézzel indítva semmit.
   - `FoliateReader.tsx`: csak `soundtrackAdapter.attach(view, bookSource)` a view létrehozásakor és `detach()` a cleanupban.
   - `package.json`: `"adapter-foliate": "file:../../packages/adapter-foliate"` (a `package-lock.json` kézzel frissítve).
-  - Kipróbálva (WSL, `npm run tauri dev`, Moby Dick EPUB): a könyvnyitás, a hash, a kezdő pozíció és a lapozásonkénti locatorok megjelennek a terminálban, duplikátum nélkül. Hátravan: commit, PR.
-- [ ] Plugin és Cargo workspace még nincs.
+  - Kipróbálva (WSL, `npm run tauri dev`, Moby Dick EPUB): a könyvnyitás, a hash, a kezdő pozíció és a lapozásonkénti locatorok megjelennek a terminálban, duplikátum nélkül.
+- [x] Gyökér `Cargo.toml` workspace és **`crates/tauri-plugin-soundtrack`** váz (a generátorból, `--no-example`, mobil projektek nélkül):
+  - Egyetlen command: `report_location(location: LocationEvent)`, egyelőre `eprintln!`-nel kiírja a locatort (`[soundtrack] location ...`). Logger (pl. `tauri-plugin-log`) még nincs.
+  - A generált `desktop.rs`/`mobile.rs` szétválasztás és az `error.rs` törölve: a logika minden platformon tiszta Rust, a `mobile.rs` pedig egy nem létező Android osztályt (`ExamplePlugin`) regisztrált volna. Ha kell, visszajön.
+  - JS API (`tauri-plugin-soundtrack-api`): build lépés és rollup nélkül, az `exports` a `guest-js/index.ts`-re mutat (mint az adapternél). A `@tauri-apps/api` peer dependency; a hostban `resolve.dedupe` oldja fel.
+  - A `guest-js` saját `Locator`/`LocationEvent` típusokat definiál (a plugin nem függhet az olvasóspecifikus adaptertől); szerkezetileg egyeznek az adapterével.
+- [x] **Bekötés a forkba** (PR #3, `add-soundtrack-plugin` → fork `main`, merge: `4468c36`): `Cargo.toml` path-függőség, `.plugin(tauri_plugin_soundtrack::init())`, `soundtrack:default` a `default.json` capabilityben, `tauri-plugin-soundtrack-api` file-függőség (`npm install`-lal), `vite.config.ts`: `resolve.dedupe: ["@tauri-apps/api"]`, `src/soundtrack.ts`: `onLocationChanged` → `reportLocation`. A `tsc`, a `vite build` és a `cargo build` lefut. Kipróbálva (WSL, Moby Dick): a locatorok lapozásonként megjelennek a Rust konzolon.
 
 ## Félév scope (önlab)
 
@@ -177,7 +181,7 @@ CREATE TABLE book_profile (book_hash TEXT PRIMARY KEY, profile_json TEXT);
 
 ## Repó-szerkezet
 
-### Kezdeti (a `hosts/` már kész, a többit most kell létrehozni)
+### Kezdeti (a `hosts/`, a `packages/adapter-foliate` és a plugin váza kész; az `epub.rs`, `analysis/`, `store.rs`, `director.rs` még hiányzik)
 
 ```
 music-book/
@@ -221,9 +225,9 @@ Az `adapter-fake` egy .txt fájlt lapozó teszt-olvasó: lehetővé teszi a fejl
 Cél: lapozás → adapter → plugin command → a Rust terminálban megjelenik a `Locator`. Nincs elemzés, nincs zene, de minden réteg a helyén van.
 
 - [x] Új repó (`music-book`) és a fork felvétele submodule-ként (`hosts/folioreader`).
-- [x] A „current context” kód a fork `main`-jén (`ReadingContext`, PR #1); lecserélve adapterre (`replace-reading-context` ág).
-- [ ] Submodule-mutató frissítése (`git add hosts/folioreader`), első commit a fő repóban.
-- [ ] Gyökér `Cargo.toml`:
+- [x] A „current context” kód a fork `main`-jén (`ReadingContext`, PR #1); lecserélve adapterre (PR #2).
+- [x] Submodule-mutató frissítése, első commit a fő repóban (`ef2bb5d`).
+- [x] Gyökér `Cargo.toml`:
   ```toml
   [workspace]
   resolver = "2"
@@ -231,22 +235,23 @@ Cél: lapozás → adapter → plugin command → a Rust terminálban megjelenik
   exclude = ["hosts/folioreader/src-tauri"]   # nélküle a FolioReader build hibát dob
   ```
 - [x] Gyökér `package.json` (`workspaces: ["packages/*"]`; a plugin JS része majd ide kerül: `crates/tauri-plugin-soundtrack`). A gyökérben lévő `workspaces` mező a Vite `server.fs.allow` miatt is kell, különben a dev szerver nem szolgálja ki a forkon kívüli csomag fájljait.
-- [ ] Plugin váz generálása a `crates/` mappában: `npx @tauri-apps/cli plugin new soundtrack` (a generált tartalom CLI-verziónként eltérhet). A `ping` példacommand átnevezése `report_location`-re, a `build.rs` `COMMANDS` listájának frissítése.
-- [ ] `models.rs`: `Locator`, `LocationEvent` (serde).
-- [ ] `guest-js/index.ts`: `reportLocation()` → `invoke('plugin:soundtrack|report_location', { location })`.
+- [x] Plugin váz generálása a `crates/` mappában: `npx @tauri-apps/cli plugin new soundtrack` (a generált tartalom CLI-verziónként eltérhet). A `ping` példacommand átnevezése `report_location`-re, a `build.rs` `COMMANDS` listájának frissítése.
+- [x] `models.rs`: `Locator`, `LocationEvent` (serde).
+- [x] `guest-js/index.ts`: `reportLocation()` → `invoke('plugin:soundtrack|report_location', { location })`.
 - [x] `packages/adapter-foliate` (`src/index.ts`, `src/types.ts`; build lépés nincs, a `exports` közvetlenül a `.ts` forrásra mutat):
   - A `<foliate-view>` `relocate` eventjére maga iratkozik fel; `attach`-ot a `view.open()` **előtt** kell hívni, így a kezdő pozíció is kimegy.
   - `bookId` = a `bookSource` (File/Blob/URL) SHA-256 hash-e; a locator-eventek megvárják. `onBookOpened` a hash-t és a Blobot adja (ebből lesz majd az `open_book(bytes)`).
   - `href` = `book.sections[index].id`, `progression` a `page/pages`-ből (a paginator képletével), `totalProgression` = a Foliate `fraction`, `text.highlight` = a látható szöveg első 200 karaktere (normalizált whitespace), `isJump` = `reason` ∈ {`navigation`, `anchor`}.
   - Azonos helyre küldött ismételt relocate (pl. átméretezés) kiszűrve; `detach()` után a késve beérkező eventek eldobva.
-- [~] ReadingContext lecserélése a forkban (lásd „Jelenlegi állapot”). Kipróbálva. Hátra van: commit, PR a fork `main`-jébe, submodule-mutató frissítése.
-- [ ] `src/soundtrack.ts` a forkban: a DEV kiírás helyett `adapter.onLocationChanged(e => reportLocation(e))` és `onBookOpened(e => openBook(e.data))`, ha a plugin kész.
-- [ ] Bekötés a forkba:
+- [x] ReadingContext lecserélése a forkban (PR #2, lásd „Jelenlegi állapot”).
+- [x] `src/soundtrack.ts` a forkban: `onLocationChanged(e => reportLocation(e))`. Az `onBookOpened(e => openBook(e.data))` a 2. mérföldkőben jön; addig a book opened/closed DEV kiírás marad.
+- [x] Bekötés a forkba (PR #3):
   - `hosts/folioreader/src-tauri/Cargo.toml`: `tauri-plugin-soundtrack = { path = "../../../crates/tauri-plugin-soundtrack" }`
-  - `hosts/folioreader/package.json`: ~~`"adapter-foliate": "file:../../packages/adapter-foliate"`~~ (kész), `"tauri-plugin-soundtrack-api": "file:../../crates/tauri-plugin-soundtrack"`
+  - `hosts/folioreader/package.json`: `"adapter-foliate": "file:../../packages/adapter-foliate"`, `"tauri-plugin-soundtrack-api": "file:../../crates/tauri-plugin-soundtrack"`
+  - `vite.config.ts`: `resolve.dedupe: ["@tauri-apps/api"]` (különben a `crates/` alatti `guest-js` importja nem oldódik fel)
   - `lib.rs`: `.plugin(tauri_plugin_soundtrack::init())`
   - `src-tauri/capabilities/*.json`: `"soundtrack:default"` hozzáadása a `permissions` listához
-- [ ] Teszt: `cd hosts/folioreader && npm run tauri dev`, lapozás, és a locator megjelenik a Rust konzolon.
+- [x] Teszt: `cd hosts/folioreader && npm run tauri dev`, lapozás, és a locator megjelenik a Rust konzolon.
 
 ### 2. mérföldkő – Szöveg a backendben
 
@@ -298,6 +303,7 @@ Cél: lapozás → adapter → plugin command → a Rust terminálban megjelenik
 ## Ismert buktatók
 
 - **Cargo workspace:** a `hosts/folioreader/src-tauri` legyen `exclude`-olva, különben a FolioReader build hibát dob.
+- **Kevés memória (WSL, ~3.7 GB):** a párhuzamos Tauri build OOM-mel elhal (exit 137). Megoldás: `cargo build -j 2`, vagy tartósan `CARGO_BUILD_JOBS=2` / `[build] jobs = 2` a `~/.cargo/config.toml`-ban (a `tauri dev` is ezt használja). Esetleg több memória a `.wslconfig`-ban.
 - **Capabilities:** ha a `soundtrack:default` hiányzik, a hívás „not allowed” hibát ad.
 - **Fejlesztői környezet (WSL):** Node az nvm-ből (`~/.nvm`, LTS), Rust a rustup-ból (`~/.cargo`), a Tauri Linux-függőségei apt-tal telepítve. A Windows-os `node.exe`/`npm`-et ne használd a WSL-es repóra: a symlinkeknél (`file:` függőség) elbukik. Ha a `which npm` a `/mnt/c/...` útvonalat adja, nincs betöltve az nvm. A WSLg alatt megjelenő `libEGL` / `MESA ZINK` warningok ártalmatlanok. Ha az ablak üres marad: `WEBKIT_DISABLE_DMABUF_RENDERER=1`.
 - **Submodule:** módosítás után két commit kell. Először a submodule-on belül (feature ág → PR → fork `main`), utána a fő repóban a submodule-mutató frissítése (`git add hosts/folioreader`). Klónozás: `git clone --recurse-submodules`.
