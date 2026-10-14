@@ -1,0 +1,17 @@
+{
+  "name": "tauri-plugin-soundtrack-api",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "JS API of tauri-plugin-soundtrack",
+  "exports": {
+    ".": "./guest-js/index.ts"
+  },
+  "types": "./guest-js/index.ts",
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "@tauri-apps/api": "^2.0.0"
+  }
+}
