@@ -11,6 +11,11 @@ links = "tauri-plugin-soundtrack"
 [dependencies]
 tauri = "2"
 serde = { version = "1", features = ["derive"] }
+# 0.x: breaking API changes are possible, hence the exact version.
+rbook = { version = "=0.7.12", default-features = false, features = ["threadsafe"] }
+scraper = "0.29"
+ego-tree = "0.11"
+sha2 = "0.10"
 
 [build-dependencies]
 tauri-plugin = { version = "2", features = ["build"] }

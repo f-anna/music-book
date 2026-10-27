@@ -295,6 +295,30 @@
       "type": "string",
       "oneOf": [
         {
+          "description": "Enables the close_book command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-close-book",
+          "markdownDescription": "Enables the close_book command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the close_book command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-close-book",
+          "markdownDescription": "Denies the close_book command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the open_book command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-open-book",
+          "markdownDescription": "Enables the open_book command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the open_book command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-open-book",
+          "markdownDescription": "Denies the open_book command without any pre-configured scope."
+        },
+        {
           "description": "Enables the report_location command without any pre-configured scope.",
           "type": "string",
           "const": "allow-report-location",
@@ -307,10 +331,10 @@
           "markdownDescription": "Denies the report_location command without any pre-configured scope."
         },
         {
-          "description": "Default permissions for the plugin\n#### This default permission set includes:\n\n- `allow-report-location`",
+          "description": "Default permissions for the plugin\n#### This default permission set includes:\n\n- `allow-open-book`\n- `allow-close-book`\n- `allow-report-location`",
           "type": "string",
           "const": "default",
-          "markdownDescription": "Default permissions for the plugin\n#### This default permission set includes:\n\n- `allow-report-location`"
+          "markdownDescription": "Default permissions for the plugin\n#### This default permission set includes:\n\n- `allow-open-book`\n- `allow-close-book`\n- `allow-report-location`"
         }
       ]
     }
