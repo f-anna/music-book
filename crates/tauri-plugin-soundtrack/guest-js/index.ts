@@ -20,6 +20,15 @@ export interface LocationEvent {
   visibleText?: string;
 }
 
+/** Sends the EPUB to the backend as a raw body. Resolves to the book id (SHA-256 of the content). */
+export async function openBook(data: Blob): Promise<string> {
+  return invoke<string>('plugin:soundtrack|open_book', new Uint8Array(await data.arrayBuffer()));
+}
+
+export async function closeBook(): Promise<void> {
+  await invoke('plugin:soundtrack|close_book');
+}
+
 export async function reportLocation(location: LocationEvent): Promise<void> {
   await invoke('plugin:soundtrack|report_location', { location });
 }
