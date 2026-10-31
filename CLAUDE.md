@@ -8,13 +8,14 @@ Egyetemi projekt. Egy e-book olvasóhoz készülő funkció, amely az olvasott s
 - **Saját backend:** Rust, egyetlen Tauri v2 pluginként (`tauri-plugin-soundtrack`).
 - **Saját frontend:** TypeScript/React csomagok (reader adapter, később UI).
 - **EPUB (backend):** `rbook` (konténer: spine, manifest, TOC, metadata) + `scraper` (XHTML → szöveg). Indoklás a 2. mérföldkőnél.
+- **Hangulatelemzés:** lokális LLM, **Qwen3-4B-Instruct-2507** (Q4_K_M GGUF) a **llama.cpp** `llama-server`-ével, külön folyamatként, OpenAI-kompatibilis HTTP API-n és JSON-séma korlátozással. Indoklás a 3. mérföldkőnél és az [`eval/qwen3-llamacpp/RESULTS.md`](eval/qwen3-llamacpp/RESULTS.md)-ben.
 - **Audio:** még nyitott kérdés: Rust oldalon `kira` crate, vagy frontendben Web Audio API / Tone.js.
 
 ## Jelenlegi állapot
 
 - [x] FolioReader forkolva (`f-anna/folioreader-study-project`).
 - [x] Saját repó létrehozva (`music-book`, ág: `master`, remote: `f-anna/music-book`). Első commit: `ef2bb5d`.
-- [x] A fork submodule-ként felvéve: `hosts/folioreader`, a mutató a fork `main`-jén lévő `4468c36`-ra (PR #3 merge) mutat.
+- [x] A fork submodule-ként felvéve: `hosts/folioreader`, a mutató a fork `main`-jén lévő `3f8d6f8`-ra (PR #6 merge) mutat.
 - [x] Gyökér `package.json` (npm workspaces: `packages/*`, `crates/tauri-plugin-soundtrack`) és `.gitignore`.
 - [x] **`packages/adapter-foliate`** kész: `createFoliateAdapter()` → `attach(view, bookSource)` / `detach()` + `ReaderAdapter` eventek. Részletek lent, az 1. mérföldkőnél.
 - [x] **A ReadingContext lecserélése a forkban** (PR #2, `replace-reading-context` → fork `main`, merge: `f352369`):
@@ -31,8 +32,11 @@ Egyetemi projekt. Egy e-book olvasóhoz készülő funkció, amely az olvasott s
   - A `guest-js` saját `Locator`/`LocationEvent` típusokat definiál (a plugin nem függhet az olvasóspecifikus adaptertől); szerkezetileg egyeznek az adapterével.
 - [x] **Bekötés a forkba** (PR #3, `add-soundtrack-plugin` → fork `main`, merge: `4468c36`): `Cargo.toml` path-függőség, `.plugin(tauri_plugin_soundtrack::init())`, `soundtrack:default` a `default.json` capabilityben, `tauri-plugin-soundtrack-api` file-függőség (`npm install`-lal), `vite.config.ts`: `resolve.dedupe: ["@tauri-apps/api"]`, `src/soundtrack.ts`: `onLocationChanged` → `reportLocation`. A `tsc`, a `vite build` és a `cargo build` lefut. Kipróbálva (WSL, Moby Dick): a locatorok lapozásonként megjelennek a Rust konzolon.
 
-- [ ] **`isJump` javítása** (fork, ág: `forward-relocate-reason`, commit `819d3f4`, még nincs push/PR): a `reason` továbbadása a Foliate view `relocate` eventjében. Kipróbálva (WSL, Moby Dick): lapozás → `jump=false`, csúszka/TOC/„következő fejezet” → `jump=true`. Hátra van: push, PR a fork `main`-jébe, majd a submodule-mutató frissítése a fő repóban.
-- [x] **EPUB crate döntés** (2. mérföldkő eleje): `rbook` a konténerhez, `scraper` a szöveghez; a spine-indexelés egyezése a Foliate-tel kipróbálva. Kód még nem került a pluginba.
+- [x] **`isJump` javítása** (fork PR #4, `forward-relocate-reason`): a `reason` továbbadása a Foliate view `relocate` eventjében. Kipróbálva (WSL, Moby Dick): lapozás → `jump=false`, csúszka/TOC/„következő fejezet” → `jump=true`.
+- [x] **Csúszka-fókusz javítása** (fork PR #5, `fix-scrubber-focus`), lásd „Ismert buktatók”.
+- [x] **2. mérföldkő kész** (fő repó PR #2, `open-book`; fork PR #6): `open_book`/`close_book`, `epub.rs`, Locator → szegmens, bekötve és az appban kipróbálva.
+- [x] **EPUB crate döntés** (2. mérföldkő eleje): `rbook` a konténerhez, `scraper` a szöveghez; a spine-indexelés egyezése a Foliate-tel kipróbálva.
+- [x] **Elemző modell döntés** (3. mérföldkő eleje): a feladatspecifikus enkóder modellek elvetve ([`eval/model-selection/RESULTS.md`](eval/model-selection/RESULTS.md)), helyettük Qwen3-4B-Instruct-2507 + llama.cpp, négy prompt-iteráció után ([`eval/qwen3-llamacpp/RESULTS.md`](eval/qwen3-llamacpp/RESULTS.md)). Plugin-kód még nincs hozzá.
 
 ## Félév scope (önlab)
 
@@ -96,22 +100,27 @@ Foliate.js <foliate-view> (relocate event)
 7. **Egyetlen plugin, belső modulokkal.** A plugin nem önálló réteg, hanem a Tauri-integráció: commandokat fogad, a `setup`-ban létrehozza a komponenseket, vezényli a folyamatot, és eventekkel visszajelez. A belső modularitást Rust modulok, később crate-ek adják, nem több plugin.
 8. **Modulszabály:** a pluginon belül **csak a `lib.rs` és a `commands.rs` importálhat `tauri`-t.** Minden más modul tiszta Rust, így később gond nélkül kiemelhető külön crate-be (pl. CLI-hez, kiértékeléshez).
 
-### Strukturált kimenet (félév, vázlat)
+### Strukturált kimenet (félév)
 
-Az elemző kimenete. A modell JSON-schema / structured output módban adja vissza, a backend validálja (serde + tartomány-ellenőrzés). Hibás kimenetnél újrapróbálás, végül `confidence = 0`.
+**A modell kimenete** (JSON-séma korlátozással, `prompt_version = 4`; a teljes prompt és séma: [`eval/qwen3-llamacpp/RESULTS.md`](eval/qwen3-llamacpp/RESULTS.md), „A végleges (4.) prompt és séma”):
 
 ```json
 {
-  "valence": -0.4,          // -1..1
-  "arousal": 0.7,           // 0..1
-  "tension": 0.8,           // 0..1
-  "tags": ["suspense", "night"],   // FIX szókészletből, nem szabad szöveg
-  "confidence": 0.75,       // 0..1
-  "rationale": "..."        // rövid indoklás, csak debughoz és a dolgozathoz
+  "rationale": "...",       // ≤ 20 szó, ELSŐ mező: a modell előbb megfogalmaz, utána pontoz
+  "valence": 2,             // enum 1..5 (1 = gyász, rémület … 5 = öröm), leírt fokozatokkal
+  "arousal": 4,             // enum 1..5 (1 = mozdulatlan … 5 = eszeveszett akció)
+  "tension": 4,             // enum 1..5 (1 = nyugodt, biztonságos … 5 = végső veszély, tetőpont)
+  "tags": ["suspense", "fear"]   // 1–3 db, a zárt listából
 }
 ```
 
-- A `tags` zárt listából jön (pl. 10–20 elem). Csak így képezhető le determinisztikusan stemekre.
+**A backend ebből állítja elő a `MoodVector`-t:** `valence = (v − 3) / 2` (−1..1), `arousal = (a − 1) / 4` és `tension = (t − 1) / 4` (0..1). A `confidence` 1, ha a válasz érvényes; 0, ha a validálás és az újrapróbálás után sem sikerült (ekkor semleges értékek).
+
+- **Miért egész skálák:** a 0–1 tört skálán a kis modell néhány értékre „beragadt” (mindenre 0,8 / 0,9); a leírt fokozatú 1–5 skálán a teljes tartományt használja.
+- **Miért nincs `confidence` a modell kimenetében:** a modell mindig a maximumot adta (8–9, illetve 5), akkor is, ha az indoklás szerint a hangulat vegyes volt.
+- **Validálás kell:** a llama.cpp az `enum`-ot kikényszeríti, de a számok `minimum`/`maximum` határait nem.
+- **Ideiglenes tag-lista (16):** calm, cheerful, humorous, tender, melancholic, grief, solemn, mysterious, ominous, fear, suspense, anger, violence, chaos, triumph, contemplative, mindegyik egysoros definícióval a promptban. A tagválasztás érzékeny a prompt apró változásaira (a „mysterious” hajlamos gyűjtőkategóriává válni), ezért a végleges listát a zenei leképezéssel együtt kell kialakítani (4. mérföldkő).
+- A `tags` zárt listából jön. Csak így képezhető le determinisztikusan stemekre.
 - A zenei leképezés **adatvezérelt**: stem-szettenként egy config (pl. `assets/stems/<set>/mapping.json`), amely megadja, hogy melyik stem hangereje hogyan függ az `arousal`/`tension`/`valence` értékektől és a tagektől. Így a zenei rész kód nélkül hangolható.
 
 ### Kulcs típusok (vázlat)
@@ -205,6 +214,9 @@ music-book/
 │           └── director.rs
 ├── packages/
 │   └── adapter-foliate/               # foliate-view relocate → Locator  ✔ kész
+├── eval/                              # modellválasztási jegyzőkönyvek (nem része a buildnek)
+│   ├── model-selection/RESULTS.md     # enkóder modellek, elvetve (a szkriptek törölve)
+│   └── qwen3-llamacpp/                # Qwen3-4B + llama.cpp: RESULTS.md, llm_probe.py, logs/
 └── hosts/
     └── folioreader/                   # git submodule (f-anna/folioreader-study-project, main)  ✔ kész
 ```
@@ -250,7 +262,7 @@ Cél: lapozás → adapter → plugin command → a Rust terminálban megjelenik
   - `href` = `book.sections[index].id`, `progression` a `page/pages`-ből (a paginator képletével), `totalProgression` = a Foliate `fraction`, `text.highlight` = a látható szöveg első 200 karaktere (normalizált whitespace), `isJump` = `reason` ∈ {`navigation`, `anchor`} (a csúszka, a TOC, a könyvjelző és a fejezetváltó gombok is `navigation`-t adnak). A `reason` csak a fork `view.js`-javításával jut el a view eventjéig, lásd „Fork-diff minimális maradjon”.
   - Azonos helyre küldött ismételt relocate (pl. átméretezés) kiszűrve; `detach()` után a késve beérkező eventek eldobva.
 - [x] ReadingContext lecserélése a forkban (PR #2, lásd „Jelenlegi állapot”).
-- [x] `src/soundtrack.ts` a forkban: `onLocationChanged(e => reportLocation(e))`. Az `onBookOpened(e => openBook(e.data))` a 2. mérföldkőben jön; addig a book opened/closed DEV kiírás marad.
+- [x] `src/soundtrack.ts` a forkban: `onLocationChanged(e => reportLocation(e))`. Az `onBookOpened(e => openBook(e.data))` a 2. mérföldkőben került be.
 - [x] Bekötés a forkba (PR #3):
   - `hosts/folioreader/src-tauri/Cargo.toml`: `tauri-plugin-soundtrack = { path = "../../../crates/tauri-plugin-soundtrack" }`
   - `hosts/folioreader/package.json`: `"adapter-foliate": "file:../../packages/adapter-foliate"`, `"tauri-plugin-soundtrack-api": "file:../../crates/tauri-plugin-soundtrack"`
@@ -271,7 +283,7 @@ Cél: lapozás → adapter → plugin command → a Rust terminálban megjelenik
   - Mindegyik highlight **egyszer** fordul elő a saját spine elemében, már 30 karakterrel is.
   - A `progression` jelentősen eltér a valódi karakterpozíciótól (pl. 0.215 vs. 0.103, 0.246 vs. 0.130), mert oldalszámból jön. A highlight-keresés tehát kell, a `progression` csak tartalék.
   - Ebből a terv: pontos keresés normalizált szövegben → ha nincs találat, whitespace nélküli keresés → végül `progression × hossz`. Fuzzy keresést csak akkor vezessünk be, ha egy könyvön ezek elbuknak. Az adapter `Range.toString()`-ot használ, ami a blokkok közé nem tesz szóközt; ha egy EPUB-ban a tagek között nincs whitespace (`</h2><p>`), a whitespace nélküli keresés fogja meg.
-- [x] **`open_book(bytes)` command** (kód kész, a `cargo check` és a Moby Dick-próba lefut; az appban még nincs kipróbálva, a fork bekötése hiányzik): raw body (`tauri::ipc::Request`, `InvokeBody::Raw`), a JS oldalon `openBook(blob)` → `Uint8Array`. A `bookId` = SHA-256 hex (`epub::content_id`), egyezik az adapterével. Az EPUB az `app_data_dir()/soundtrack/books/<id>.epub`-ba kerül (ha nem sikerül, csak warning). A parse `spawn_blocking`-ban fut (Moby Dick: ~20 ms release, ~270 ms debug buildben). Mellette `close_book` (a `generation` számláló miatt egy épp futó `open_book` nem nyitja újra a bezárt könyvet).
+- [x] **`open_book(bytes)` command** (a `cargo check` és a Moby Dick-próba lefut, az appban kipróbálva): raw body (`tauri::ipc::Request`, `InvokeBody::Raw`), a JS oldalon `openBook(blob)` → `Uint8Array`. A `bookId` = SHA-256 hex (`epub::content_id`), egyezik az adapterével. Az EPUB az `app_data_dir()/soundtrack/books/<id>.epub`-ba kerül (ha nem sikerül, csak warning). A parse `spawn_blocking`-ban fut (Moby Dick: ~20 ms release, ~270 ms debug buildben). Mellette `close_book` (a `generation` számláló miatt egy épp futó `open_book` nem nyitja újra a bezárt könyvet).
   - Állapot (`lib.rs`, `Session` egy `Mutex`-ben): a megnyitott `Arc<Book>` és a `pending_location`. Ha a `report_location` a könyv betöltése előtt jön, a legutolsó locator elmentődik, és az `open_book` végén feldolgozódik.
 - [x] **`epub.rs`** (tiszta Rust): `Book::open(id, bytes)` → `sections` (a Foliate indexelésével, `href` `/` nélkül) + `segments`.
   - Szöveg: a `<body>` blokkelemenként bekezdésekre bontva (a `<br>` is határ), whitespace-normalizálva; a szakasz szövege a bekezdések szóközzel összefűzve (így egyezik a `Range.toString()`-gal).
@@ -279,15 +291,27 @@ Cél: lapozás → adapter → plugin command → a Rust terminálban megjelenik
   - Pozíció: spine index + bájt-offset a normalizált szakaszszövegben (`Segment::start/end`).
   - Moby Dick: 13 szakasz, 347 szegmens, 215 845 szó; szegmensméret medián 689, p10 306, p90 791, min 102 (rövid fejezetek), max 1021.
 - [x] **Locator → szegmens** (`Book::locate`): pontos keresés a normalizált szövegben → whitespace nélküli keresés → `progression × hossz`. Több találatnál a `progression`-becsléshez legközelebbi nyer. Ha a szakaszban nincs szöveg (pl. borító), nincs szegmens. Lapozáskor a konzolra: `[soundtrack] segment #N section=… words=… via=Exact|IgnoringWhitespace|Progression text="…"`; ha a `href` nem egyezik a reader `href`-jével, WARNING. Moby Dick, valódi locatorokkal: mind `Exact`, a href mindig egyezik.
-- [ ] **Bekötés a forkba:** `src/soundtrack.ts`: `onBookOpened(e => openBook(e.data))`, `onBookClosed(() => closeBook())`. Utána teszt az appban: a `book opened` sor a Rust konzolon, és lapozásonként a `segment` sor.
+- [x] **Bekötés a forkba** (fork PR #6, `open-book`): `src/soundtrack.ts`: `onBookOpened(e => openBook(e.data))`, `onBookClosed(() => closeBook())`. Kipróbálva (WSL, Moby Dick): `book opened ... segments=347 words=215845` (egyezik a próbaprogrammal), a szöveges locatorok mind `via=Exact`, az üres `text` `via=Progression`, href-eltérés (`WARNING`) nincs.
+- [ ] Szegmentálási finomítás: egy fejezetcím ne olvadjon az előző fejezet 100 szónál rövidebb maradékával egy szegmensbe (a Moby Dickben pl. a CHAPTER 11 a #37 szegmens közepén van); a rövid maradék inkább az előző szegmenshez kerüljön.
 
 ### 3. mérföldkő – Elemzés kész nyelvi modellel, strukturált kimenet
 
-- [ ] `MoodAnalysis` séma véglegesítése (mezők, tartományok, zárt tag-lista).
-- [ ] `MoodAnalyzer` trait + első implementáció: LLM structured output (JSON schema) módban, HTTP-n (`reqwest`). Az API-kulcs ne kerüljön a repóba.
-- [ ] Validálás, újrapróbálás, `confidence` kezelése.
-- [ ] SQLite cache (`store.rs`): `(book_hash, seg_index, model_id, prompt_version)` → kimenet.
-- [ ] Opcionális második implementáció összehasonlításhoz: kész érzelem-osztályozó vagy NRC VAD lexikon.
+- [x] **Modellválasztás** (2026-10-28–31):
+  - Feladatspecifikus enkóder modellek ([`eval/model-selection/RESULTS.md`](eval/model-selection/RESULTS.md)): 13 jelölt átnézve, 4 kiválasztva (PERT-EmoPair, vad-bert, zero-shot DeBERTa, GoEmotions). **Elvetve:** a lefutott két modell a skálák csak 4–5%-át használta, egymással gyengén egyezett (Spearman ≈ 0,3); a zero-shot DeBERTa szegmensenként több mint 4,5 perc; egyik sem adja egymagában a tensiont, a tageket és az indoklást.
+  - Kis generatív LLM-ek (Qwen3.5, Phi-4-mini, SmolLM3, Llama 3.2) áttekintve; a **Qwen3-4B-Instruct-2507** mellett döntöttünk (Apache-2.0; a „2507 Instruct” a thinking nélküli változat).
+  - **Qwen3-4B + llama.cpp** ([`eval/qwen3-llamacpp/RESULTS.md`](eval/qwen3-llamacpp/RESULTS.md)): 4 prompt-iteráció 7 kontrasztos Moby Dick-részleten. A végleges prompttal a JSON 24/24 érvényes, a skálák a teljes 1–5 tartományt használják (V 2–5, A 2–5, T 1–5), a részletek sorrendje egyezik a várt hangulattal. Sebesség: meleg állapotban kb. 50–100 s / szegmens, kiugrásokkal 2–4 percig (swap). Memória: kb. 2,6–2,9 GB.
+  - Telepítés (a repón kívül): llama.cpp forrásból `~/tools/llama.cpp` (`cmake -B build -DCMAKE_BUILD_TYPE=Release -DLLAMA_CURL=OFF`, `cmake --build build -j 2 --target llama-server llama-cli`), modell `~/models/Qwen3-4B-Instruct-2507-Q4_K_M.gguf` (`unsloth/Qwen3-4B-Instruct-2507-GGUF`, 2,5 GB). Indítás:
+    ```bash
+    nohup ~/tools/llama.cpp/build/bin/llama-server -m ~/models/Qwen3-4B-Instruct-2507-Q4_K_M.gguf \
+      -c 2048 -t 4 --host 127.0.0.1 --port 8080 > ~/llama-server.log 2>&1 &
+    ```
+- [x] `MoodAnalysis` séma (prototípus): lásd „Strukturált kimenet”. A tag-lista ideiglenes.
+- [ ] `models.rs`: a modell kimenetének típusa és a `MoodVector`, az 1–5 → skála leképezéssel.
+- [ ] `analysis/`: `MoodAnalyzer` trait + `LlamaCppAnalyzer` (`reqwest`, `/v1/chat/completions`, `temperature 0`, `seed 42`, `response_format: json_schema`, a 4. prompt). A szerver címe beállítható (alapértelmezés `http://127.0.0.1:8080`). Tiszta Rust, `tauri` nélkül.
+- [ ] Validálás (tartomány, tag-lista), 1–2 újrapróbálás, végül `confidence = 0`.
+- [ ] SQLite cache (`store.rs`): saját fájl az app data mappában, `rusqlite` (`bundled`); kulcs `(book_hash, seg_index, model_id, prompt_version)` → kimenet (JSON) + időbélyeg.
+- [ ] Bekötés a `report_location`-be: cache-ből, vagy háttér-worker elemzi (mindig a legfrissebb pozíció szegmense, utána a következő előre); a command soha nem vár a modellre. Konzolra: `[soundtrack] analysis #N V/A/T tags (cache|model, X s)`.
+- [ ] Opcionális második implementáció összehasonlításhoz: NRC VAD lexikon, vagy a Qwen3-1.7B (gyorsabb, kisebb tartalék).
 - [ ] Kézzel címkézett ground truth néhány fejezetre, és egy egyszerű metrika (pl. korreláció a valence/arousal értékekkel).
 
 ### 4. mérföldkő – Zenei rétegek vezérlése
@@ -319,25 +343,35 @@ Cél: lapozás → adapter → plugin command → a Rust terminálban megjelenik
 ## Nyitott kérdések
 
 - Hol szól a zene: Rust (`kira`) vagy frontend (Web Audio)? Android WebView audio megbízhatósága?
-- Melyik kész modell legyen? (Felhőalapú LLM API vs. lokális, pl. Ollama, vs. kész osztályozó.) A nyelv eldőlt: csak angol (lásd a félév scope-ját), így angol nyelvű kész osztályozók és az NRC VAD lexikon is szóba jön.
+- ~~Melyik kész modell legyen?~~ **Eldőlt:** Qwen3-4B-Instruct-2507 + llama.cpp (lásd a 3. mérföldkövet). Nyitott maradt: hogyan induljon a `llama-server` az app mellett (Tauri sidecar?), és mi legyen Androidon (ott egy 4B-s modell valószínűleg túl nagy).
 - Honnan lesznek a stemek, és milyen licenccel?
 
 ## Ismert buktatók
 
 - **Cargo workspace:** a `hosts/folioreader/src-tauri` legyen `exclude`-olva, különben a FolioReader build hibát dob.
-- **Kevés memória (WSL, ~3.7 GB):** a párhuzamos Tauri build OOM-mel elhal (exit 137). Megoldás: `cargo build -j 2`, vagy tartósan `CARGO_BUILD_JOBS=2` / `[build] jobs = 2` a `~/.cargo/config.toml`-ban (a `tauri dev` is ezt használja). Esetleg több memória a `.wslconfig`-ban.
+- **Kevés memória (WSL):** a párhuzamos Tauri build OOM-mel elhal (exit 137). Megoldás: `cargo build -j 2`, vagy tartósan `CARGO_BUILD_JOBS=2` / `[build] jobs = 2` a `~/.cargo/config.toml`-ban (a `tauri dev` is ezt használja).
+- **`.wslconfig` (`C:\Users\Anna\.wslconfig`):** a WSL memóriája 3,7 GB-ról 5 GB-ra emelve az LLM miatt (`[wsl2] memory=5GB`, `[experimental] autoMemoryReclaim=gradual`). A gép 7,7 GB-jából így a Windowsnak kb. 2,7 GB marad, mérés közben érdemes a böngészőt bezárni. Életbe lépés: PowerShellben `wsl --shutdown` (minden WSL-folyamat leáll). Visszaállítás: a fájl törlése és újabb `wsl --shutdown`.
+- **A `/tmp` tmpfs (memóriában van):** a `wsl --shutdown` vagy újraindítás kiüríti, és a RAM-ot foglalja. Nagy fájl (virtuális környezet, modell) és megőrzendő szkript ne kerüljön oda.
+- **`llama-server`:**
+  - Ha a VS Code termináljában fut, a terminállal (vagy a munkamenettel) együtt leáll; két mérés is így szakadt félbe. Háttérben indítsd: `nohup … > ~/llama-server.log 2>&1 &`, leállítás: `pkill llama-server`.
+  - Az első betöltés kb. 4,5 perc lehet (szűk memória), az első kérés egy (újra)indítás után 2–4 perc. A kontextus `-c 2048` (a `4096` kb. 300 MB-tal többet foglal, és a kb. 1,5k tokenes kéréshez nem kell).
+  - A JSON-séma `enum`-jait kikényszeríti, a számok `minimum`/`maximum` határait **nem**: a backendnek validálnia kell.
+  - A llama.cpp legfrissebb kiadásához (v0.8.0) nem volt Linuxos bináris, ezért forrásból fordítjuk (`cmake` és `build-essential` kell hozzá).
 - **Capabilities:** ha a `soundtrack:default` hiányzik, a hívás „not allowed” hibát ad.
 - **Fejlesztői környezet (WSL):** Node az nvm-ből (`~/.nvm`, LTS), Rust a rustup-ból (`~/.cargo`), a Tauri Linux-függőségei apt-tal telepítve. A Windows-os `node.exe`/`npm`-et ne használd a WSL-es repóra: a symlinkeknél (`file:` függőség) elbukik. Ha a `which npm` a `/mnt/c/...` útvonalat adja, nincs betöltve az nvm. A WSLg alatt megjelenő `libEGL` / `MESA ZINK` warningok ártalmatlanok. Ha az ablak üres marad: `WEBKIT_DISABLE_DMABUF_RENDERER=1`.
 - **Submodule:** módosítás után két commit kell. Először a submodule-on belül (feature ág → PR → fork `main`), utána a fő repóban a submodule-mutató frissítése (`git add hosts/folioreader`). Klónozás: `git clone --recurse-submodules`.
 - **Fork-diff minimális maradjon:** a forkban csak a plugin regisztrációja, a capability bejegyzés, az `adapter.attach()` hívás és a UI felcsatolása legyen. Szándékos kivételek:
   1. A `RequireAuth` wrapper eltávolítása a könyvtárnézet elől (`App.tsx`). Ne tegyük vissza, mert vele Folio szerver / bejelentkezés nélkül nem lehet helyi könyvet megnyitni.
   2. A `reason` továbbadása a Foliate view `relocate` eventjében (`src/foliate-js/view.js`, `#onRelocate`: a `lastLocation`-be bekerül a `reason`; ág: `forward-relocate-reason`). Nélküle a `reason` mindig `undefined`, mert a view csak a paginator eventjéből építi újra a detailt, és kihagyja. Emiatt az adapter `isJump`-ja mindig `false` volt. Ugyanez a FolioReader saját hibája is: a `FoliateReader.tsx` relocate-kezelője is a `detail.reason`-t olvassa, így a „quick return” gomb lapozáskor nem tűnt el, és a TOC/link/könyvjelző ugrások is lapozásnak számítottak az olvasási statisztikában. Az upstream FolioReaderben (`bastonta/FolioReader`) és a foliate-js-ben (`johnfactotum/foliate-js`) is hiányzik; ha az upstream javítja, ez a kivétel megszűnik.
-  3. A csúszka fókuszának elengedése seek után (`ProgressScrubber.tsx`, ág: `fix-scrubber-focus`), lásd „FolioReader-hiba: csúszka után a nyilak nem lapoztak”. A „Browse” nézet szerver nélkül `Server URL not configured` hibát ad, ez várt viselkedés.
+  3. A csúszka fókuszának elengedése seek után (`ProgressScrubber.tsx`, ág: `fix-scrubber-focus`), lásd „FolioReader-hiba: csúszka után a nyilak nem lapoztak”.
+
+  A „Browse” nézet szerver nélkül `Server URL not configured` hibát ad, ez várt viselkedés.
 - **A régi ReadingContext problémái** (ezért cseréltük adapterre): az első pozíciónál (`previousLocation === null`) nem megy ki event, így a kezdő pozíció elveszik. A `clearLocation()` a `locationRef`-et nem nullázza. Mivel a `FoliateReader` maga is fogyasztja a contextet, minden `relocate` újrarendereli a teljes olvasókomponenst. A `fraction` a teljes könyvre vonatkozik, a `tocItem.href` pedig TOC-horgony, nem spine elem.
 - **Hosszú spine elemek:** a Gutenberg-féle EPUB-okban egy spine elem több fejezetet is tartalmazhat (a Moby Dickben a tartalomjegyzék, az ETYMOLOGY és az EXTRACTS is ugyanabban a fájlban van). A `progression` ezért durva; a szegmens megtalálásához a `text.highlight` alapú keresés kell (2. mérföldkő).
 - **React StrictMode (dev):** a view-t létrehozó effect kétszer fut le, ezért induláskor egy `book closed` jön a `book opened` előtt. Ez várt viselkedés, az első, eldobott attach hash-e nem megy ki.
 - **Tauri verzió-eltérés warning:** `tauri-plugin-opener (v2.7.1) : @tauri-apps/plugin-opener (v2.6.0)`. Nem tőlünk jön: a `Cargo.lock` gitignore-olva van, ezért a friss build újabb crate-et old fel. Javítás: az npm csomagot `^2.7`-re emelni (külön commitban).
-- **FolioReader-hiba: csúszka után a nyilak nem lapoztak** (javítva a forkban, ág: `fix-scrubber-focus`, commit `14a0c11`, még nincs push/PR/kipróbálás; ez a fork-diff 3. kivétele). Kattintás után a `<input type="range">` (`ProgressScrubber.tsx`) fókuszban marad. A globális billentyűkezelő (`FoliateReader.tsx`, `handleGlobalKeyDown`) minden `<input>`-ból jövő billentyűt figyelmen kívül hagy, így a jobbra/balra nyíl a csúszkát lépteti (`step=0.001`, ez kevesebb egy oldalnál), ami `goToFraction`-t hív. A pozíció két oldal között ingadozik, és minden lépés `jump=true` locatort küld. Javítás: egérrel/érintéssel végzett seek után a csúszka elengedi a fókuszt (`blur()` az `onPointerUp`-ban és a globális `pointerup` kezelőben, ha a húzás a csúszkán kívül ér véget). Billentyűzettel (Tab + nyilak) a csúszka továbbra is léptethető. Upstream bejelentésre jelölt.
+- **FolioReader-hiba: csúszka után a nyilak nem lapoztak** (javítva a forkban, PR #5, `fix-scrubber-focus`; ez a fork-diff 3. kivétele). Kattintás után a `<input type="range">` (`ProgressScrubber.tsx`) fókuszban marad. A globális billentyűkezelő (`FoliateReader.tsx`, `handleGlobalKeyDown`) minden `<input>`-ból jövő billentyűt figyelmen kívül hagy, így a jobbra/balra nyíl a csúszkát lépteti (`step=0.001`, ez kevesebb egy oldalnál), ami `goToFraction`-t hív. A pozíció két oldal között ingadozik, és minden lépés `jump=true` locatort küld. Javítás: egérrel/érintéssel végzett seek után a csúszka elengedi a fókuszt (`blur()` az `onPointerUp`-ban és a globális `pointerup` kezelőben, ha a húzás a csúszkán kívül ér véget). Billentyűzettel (Tab + nyilak) a csúszka továbbra is léptethető. Upstream bejelentésre jelölt.
+- **A fejléc nyilai (← →) nem lapoznak:** a „Show sidebar” melletti gombok a navigációs előzmények (Vissza/Előre, `HeaderBar.tsx`). Könyvnyitáskor és sima lapozás után szürkék (a lapozás `replaceState`), csak ugrás (TOC, link, csúszka, könyvjelző) után lesz aktív a ←. Ez várt viselkedés, nem hiba.
 - **Üres `text.highlight`:** a fejezetek elején (pl. `progression=0.000`) a látható range üres lehet (`text=""`). Ilyenkor a Locator → szegmens leképezés a `progression`-alapú tartalékot használja.
 - **Spine-indexelés (`rbook` ↔ Foliate):** a Foliate a `linear="no"` spine elemeket is beszámozza (csak a manifestből hiányzókat hagyja ki), az `rbook` `spine()`-ja szintén. Az `rbook` `reader()`-ét **nem szabad** `LinearBehavior::LinearOnly`-val használni, mert az kihagyja ezeket, és minden `sectionIndex` elcsúszik. A href-ek közti egyetlen eltérés: az `rbook` `/`-rel kezdi (`/OEBPS/x.xhtml`), a Foliate `id`-ja nem (`OEBPS/x.xhtml`); mindkettő dekódolt.
 - **A könyvforrás File/Blob:** a FolioReader `bookSource`-a nem mindig fájlútvonal (Androidon főleg nem), ezért az `open_book` bájtokat kap, nem útvonalat.

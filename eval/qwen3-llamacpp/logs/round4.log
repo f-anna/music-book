@@ -1,0 +1,56 @@
+=== CHAPTER 3. The Spouter-Inn. (dark painting, then comic), 712 words
+wall 130.8s | prompt 1421 tok in 88.8s (16.0 tok/s) | output 90 tok in 15.9s (5.6 tok/s)
+{"rationale": "The passage evokes a sense of eerie mystery, unsettling imagery, and deep psychological unease, with a strong undercurrent of foreboding and intellectual fascination.", "valence": 2, "arousal": 4, "tension": 4, "tags": ["mysterious", "ominous", "suspense"]}
+=== CHAPTER 93. The Castaway. (Pip: sad, horror), 709 words
+wall 81.1s | prompt 970 tok in 56.1s (17.3 tok/s) | output 95 tok in 21.5s (4.4 tok/s)
+{"rationale": "The passage evokes a sense of dread and foreboding, with a focus on Pip's traumatic accident and the ominous, suspenseful tension of being dragged by the whale line.", "valence": 2, "arousal": 4, "tension": 4, "tags": ["melancholic", "suspense", "mysterious"]}
+=== CHAPTER 119. The Candles. (storm: tense), 705 words
+wall 138.0s | prompt 1029 tok in 46.8s (22.0 tok/s) | output 100 tok in 84.2s (1.2 tok/s)
+{"rationale": "The passage blends dark, stormy imagery with a sudden shift into playful, ironic singing about the ocean as a 'jolly' and 'funny' entity, reflecting a mix of dread and comic relief.", "valence": 3, "arousal": 4, "tension": 4, "tags": ["mysterious", "humorous", "suspense"]}
+=== CHAPTER 94. A Squeeze of the Hand. (blissful, happy), 700 words
+wall 82.2s | prompt 939 tok in 36.1s (26.0 tok/s) | output 96 tok in 14.6s (6.5 tok/s)
+{"rationale": "The passage evokes a deeply peaceful, affectionate, and warm emotional state, centered on sensory pleasure, intimacy, and a sense of universal human connection through the act of squeezing sperm.", "valence": 5, "arousal": 3, "tension": 1, "tags": ["cheerful", "tender", "contemplative"]}
+Traceback (most recent call last):
+  File "/tmp/claude-1000/-home-anna-egyetem-msc-2026-27-01-onlab-music-book/314909fa-ca7f-4903-a057-5a1dff9a2788/scratchpad/llm_probe.py", line 162, in <module>
+    main()
+    ~~~~^^
+  File "/tmp/claude-1000/-home-anna-egyetem-msc-2026-27-01-onlab-music-book/314909fa-ca7f-4903-a057-5a1dff9a2788/scratchpad/llm_probe.py", line 147, in main
+    resp, wall = ask(text)
+                 ~~~^^^^^^
+  File "/tmp/claude-1000/-home-anna-egyetem-msc-2026-27-01-onlab-music-book/314909fa-ca7f-4903-a057-5a1dff9a2788/scratchpad/llm_probe.py", line 139, in ask
+    resp = json.load(urllib.request.urlopen(req, timeout=1800))
+                     ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/urllib/request.py", line 187, in urlopen
+    return opener.open(url, data, timeout)
+           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/urllib/request.py", line 487, in open
+    response = self._open(req, data)
+  File "/usr/lib/python3.14/urllib/request.py", line 504, in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+                              '_open', req)
+  File "/usr/lib/python3.14/urllib/request.py", line 464, in _call_chain
+    result = func(*args)
+  File "/usr/lib/python3.14/urllib/request.py", line 1350, in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/urllib/request.py", line 1325, in do_open
+    r = h.getresponse()
+  File "/usr/lib/python3.14/http/client.py", line 1459, in getresponse
+    response.begin()
+    ~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.14/http/client.py", line 336, in begin
+    version, status, reason = self._read_status()
+                              ~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.14/http/client.py", line 305, in _read_status
+    raise RemoteDisconnected("Remote end closed connection without"
+                             " response")
+http.client.RemoteDisconnected: Remote end closed connection without response
+=== CHAPTER 10. A Bosom Friend. (warm, calm), 700 words
+wall 196.2s | prompt 1334 tok in 162.3s (8.2 tok/s) | output 92 tok in 32.5s (2.8 tok/s)
+{"rationale": "The passage conveys a sense of quiet observation and deep, unspoken affection, with a touch of melancholy and wonder at Queequeg's solitude and inner peace.", "valence": 4, "arousal": 2, "tension": 2, "tags": ["tender", "calm", "solemn"]}
+=== CHAPTER 132. The Symphony. (tender, melancholic), 703 words
+wall 61.4s | prompt 999 tok in 39.4s (25.4 tok/s) | output 96 tok in 15.9s (6.0 tok/s)
+{"rationale": "The passage evokes a deep, melancholic reflection on isolation, loss, and a long-standing inner torment, with moments of tender, almost poetic beauty contrasting against Ahab’s grief.", "valence": 3, "arousal": 2, "tension": 3, "tags": ["melancholic", "tender", "suspense"]}
+=== Almost simultaneously, with a mighty volition (Ch. 135 catastrophe: frantic), 708 words
+wall 172.3s | prompt 1024 tok in 147.4s (6.9 tok/s) | output 83 tok in 20.1s (4.1 tok/s)
+{"rationale": "The passage is filled with intense action, dread, and a sense of inevitable doom, driven by violent imagery and emotional turmoil.", "valence": 2, "arousal": 5, "tension": 5, "tags": ["suspense", "fear", "mysterious"]}
