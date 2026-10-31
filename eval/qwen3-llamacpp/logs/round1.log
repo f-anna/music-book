@@ -1,0 +1,9 @@
+=== CHAPTER 3. The Spouter-Inn. (comic, atmospheric), 712 words
+wall 195.5s | prompt 1135 tok in 159.1s (7.1 tok/s) | output 98 tok in 34.0s (2.9 tok/s)
+{"rationale": "The passage evokes a sense of eerie mystery, unease, and deep psychological tension through its descriptions of distorted art, ominous symbols, and unsettling imagery.", "valence": 0.1, "arousal": 0.8, "tension": 0.9, "tags": ["mysterious", "ominous", "suspense"], "confidence": 0.9}
+=== CHAPTER 93. The Castaway. (Pip: sad, horror), 709 words
+wall 67.4s | prompt 970 tok in 43.6s (22.2 tok/s) | output 108 tok in 18.4s (5.8 tok/s)
+{"rationale": "The passage conveys a sense of dread, helplessness, and ominous danger as Pip is violently dragged into the water and caught in the whale's line, evoking a tone of suspense and fear.", "valence": 0.2, "arousal": 0.8, "tension": 0.9, "tags": ["suspense", "fear", "melancholic"], "confidence": 0.9}
+=== CHAPTER 119. The Candles. (storm: tense), 705 words
+wall 95.7s | prompt 1029 tok in 69.3s (14.8 tok/s) | output 117 tok in 22.2s (5.2 tok/s)
+{"rationale": "The passage conveys a mix of dread and dark humor amid the chaos of the typhoon, with the crew's desperate situation contrasted by Stubb's ironic, almost absurd singing about the ocean as a 'funny, sporty' lad.", "valence": 0.2, "arousal": 0.8, "tension": 0.9, "tags": ["suspense", "humorous", "grief"], "confidence": 0.9}

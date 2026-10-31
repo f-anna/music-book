@@ -1,0 +1,47 @@
+=== CHAPTER 94. A Squeeze of the Hand. (blissful, happy), 700 words
+wall 147.3s | prompt 940 tok in 116.3s (8.1 tok/s) | output 94 tok in 29.5s (3.1 tok/s)
+{"rationale": "The passage evokes a deeply peaceful, affectionate, and emotionally warm atmosphere, centered on sensory pleasure, human connection, and spiritual renewal through the act of squeezing sperm.", "valence": 5, "arousal": 3, "tension": 1, "tags": ["tender", "cheerful", "contemplative"], "confidence": 9}
+=== CHAPTER 10. A Bosom Friend. (warm, calm), 700 words
+wall 49.4s | prompt 893 tok in 33.0s (27.1 tok/s) | output 93 tok in 13.7s (6.7 tok/s)
+{"rationale": "The passage conveys a contemplative, somewhat melancholic atmosphere, with a sense of quiet observation and deep introspection about Queequeg's nature and solitude.", "valence": 3, "arousal": 2, "tension": 2, "tags": ["tender", "contemplative", "melancholic"], "confidence": 8}
+=== CHAPTER 132. The Symphony. (tender, melancholic), 703 words
+wall 59.9s | prompt 999 tok in 38.2s (26.2 tok/s) | output 85 tok in 18.7s (4.5 tok/s)
+{"rationale": "The passage evokes a deeply reflective, melancholic atmosphere, blending serene natural imagery with Ahab's internal sorrow and isolation.", "valence": 3, "arousal": 2, "tension": 3, "tags": ["melancholic", "contemplative", "solemn"], "confidence": 9}
+Traceback (most recent call last):
+  File "/tmp/claude-1000/-home-anna-egyetem-msc-2026-27-01-onlab-music-book/314909fa-ca7f-4903-a057-5a1dff9a2788/scratchpad/llm_probe.py", line 145, in <module>
+    main()
+    ~~~~^^
+  File "/tmp/claude-1000/-home-anna-egyetem-msc-2026-27-01-onlab-music-book/314909fa-ca7f-4903-a057-5a1dff9a2788/scratchpad/llm_probe.py", line 130, in main
+    resp, wall = ask(text)
+                 ~~~^^^^^^
+  File "/tmp/claude-1000/-home-anna-egyetem-msc-2026-27-01-onlab-music-book/314909fa-ca7f-4903-a057-5a1dff9a2788/scratchpad/llm_probe.py", line 122, in ask
+    resp = json.load(urllib.request.urlopen(req, timeout=1800))
+                     ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/urllib/request.py", line 187, in urlopen
+    return opener.open(url, data, timeout)
+           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/urllib/request.py", line 487, in open
+    response = self._open(req, data)
+  File "/usr/lib/python3.14/urllib/request.py", line 504, in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+                              '_open', req)
+  File "/usr/lib/python3.14/urllib/request.py", line 464, in _call_chain
+    result = func(*args)
+  File "/usr/lib/python3.14/urllib/request.py", line 1350, in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/urllib/request.py", line 1325, in do_open
+    r = h.getresponse()
+  File "/usr/lib/python3.14/http/client.py", line 1459, in getresponse
+    response.begin()
+    ~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.14/http/client.py", line 336, in begin
+    version, status, reason = self._read_status()
+                              ~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.14/http/client.py", line 305, in _read_status
+    raise RemoteDisconnected("Remote end closed connection without"
+                             " response")
+http.client.RemoteDisconnected: Remote end closed connection without response
+=== Almost simultaneously, with a mighty volition (Ch. 135 catastrophe: frantic), 708 words
+wall 102.1s | prompt 1311 tok in 87.0s (15.1 tok/s) | output 91 tok in 14.5s (6.2 tok/s)
+{"rationale": "The passage is filled with intense action, dread, and a sense of inevitable doom, driven by the whale's relentless pursuit and the crew's fear and desperation.", "valence": 2, "arousal": 5, "tension": 5, "tags": ["suspense", "fear", "mysterious"], "confidence": 9}

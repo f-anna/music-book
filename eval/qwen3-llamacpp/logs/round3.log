@@ -1,0 +1,21 @@
+=== CHAPTER 3. The Spouter-Inn. (dark painting, then comic), 712 words
+wall 72.0s | prompt 1235 tok in 56.8s (21.8 tok/s) | output 87 tok in 13.4s (6.4 tok/s)
+{"rationale": "The passage evokes a sense of eerie mystery, unease, and deep psychological unease through its unsettling imagery and ambiguous, haunting descriptions.", "valence": 2, "arousal": 4, "tension": 4, "tags": ["mysterious", "ominous", "suspense"], "confidence": 5}
+=== CHAPTER 93. The Castaway. (Pip: sad, horror), 709 words
+wall 61.3s | prompt 970 tok in 39.2s (24.7 tok/s) | output 83 tok in 21.3s (3.9 tok/s)
+{"rationale": "A mix of melancholic and ominous tones, with a sense of dread and tragic fate emerging from Pip's ordeal.", "valence": 2, "arousal": 4, "tension": 4, "tags": ["melancholic", "ominous", "suspense"], "confidence": 5}
+=== CHAPTER 119. The Candles. (storm: tense), 705 words
+wall 118.9s | prompt 1029 tok in 77.1s (13.4 tok/s) | output 90 tok in 17.8s (5.0 tok/s)
+{"rationale": "The passage blends dark natural imagery with a defiant, almost humorous tone as characters confront the storm, culminating in a moment of hope and strategic insight.", "valence": 4, "arousal": 4, "tension": 3, "tags": ["humorous", "contemplative", "suspense"], "confidence": 5}
+=== CHAPTER 94. A Squeeze of the Hand. (blissful, happy), 700 words
+wall 99.3s | prompt 939 tok in 78.8s (11.9 tok/s) | output 85 tok in 12.6s (6.7 tok/s)
+{"rationale": "A serene, affectionate, and deeply peaceful atmosphere emerges, centered on sensory delight and emotional release through the act of squeezing sperm.", "valence": 5, "arousal": 3, "tension": 1, "tags": ["tender", "calm", "cheerful"], "confidence": 5}
+=== CHAPTER 10. A Bosom Friend. (warm, calm), 700 words
+wall 57.0s | prompt 893 tok in 39.9s (22.4 tok/s) | output 85 tok in 13.6s (6.2 tok/s)
+{"rationale": "A blend of quiet contemplation and subtle melancholy, with a sense of deep, unspoken affection and quiet strangeness.", "valence": 3, "arousal": 2, "tension": 2, "tags": ["contemplative", "melancholic", "solemn"], "confidence": 5}
+=== CHAPTER 132. The Symphony. (tender, melancholic), 703 words
+wall 59.9s | prompt 999 tok in 41.8s (23.9 tok/s) | output 84 tok in 15.3s (5.4 tok/s)
+{"rationale": "A blend of melancholic reflection and tender nostalgia, with deep emotional resonance and a sense of quiet sorrow amid natural beauty.", "valence": 3, "arousal": 2, "tension": 2, "tags": ["melancholic", "contemplative", "tender"], "confidence": 5}
+=== Almost simultaneously, with a mighty volition (Ch. 135 catastrophe: frantic), 708 words
+wall 61.8s | prompt 1024 tok in 44.8s (22.8 tok/s) | output 89 tok in 13.7s (6.4 tok/s)
+{"rationale": "A scene of violent, relentless confrontation with a primal force, driven by rage, dread, and unrelenting tension.", "valence": 1, "arousal": 5, "tension": 5, "tags": ["grief", "fear", "suspense"], "confidence": 5}
