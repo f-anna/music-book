@@ -1,0 +1,26 @@
+{
+  "model": "MoritzLaurer/ModernBERT-large-zeroshot-v2.0",
+  "revision": "a51e07b524299e309dd2b88d48b0cfa2bd9ec598",
+  "labels": [
+    "ominous",
+    "suspenseful",
+    "mysterious",
+    "melancholic",
+    "warm and cozy",
+    "peaceful",
+    "hopeful",
+    "oppressive",
+    "whimsical",
+    "wondrous"
+  ],
+  "templates": {
+    "v1": "The atmosphere of this passage is {}.",
+    "v2": "This passage creates a {} atmosphere."
+  },
+  "threads": 4,
+  "load_s": 7.9,
+  "peak_rss_mb": 2281,
+  "torch": "2.14.1+cu130",
+  "transformers": "4.57.6",
+  "cpu": "x86_64"
+}

@@ -1,0 +1,116 @@
+loaded in 7.9s, rss 2225 MB
+v1 loomings           150w   186tok  10.3s  melancholic=0.727 suspenseful=0.533 whimsical=0.378 ominous=0.267
+v1 spouter_painting   150w   203tok   8.7s  mysterious=0.974 suspenseful=0.254 ominous=0.214 oppressive=0.049
+v1 spouter_landlord   150w   205tok   8.4s  melancholic=0.849 mysterious=0.560 suspenseful=0.542 ominous=0.410
+v1 sermon             150w   216tok   9.2s  suspenseful=0.962 ominous=0.356 oppressive=0.162 wondrous=0.161
+v1 bosom_friend       150w   207tok   9.8s  whimsical=0.834 mysterious=0.126 suspenseful=0.058 wondrous=0.028
+v1 cetology           150w   205tok   8.9s  suspenseful=0.979 mysterious=0.948 ominous=0.158 wondrous=0.107
+v1 sunset             150w   236tok  75.3s  mysterious=0.990 wondrous=0.980 whimsical=0.978 suspenseful=0.935
+v1 whiteness          150w   201tok  10.4s  mysterious=0.990 ominous=0.820 suspenseful=0.609 wondrous=0.391
+v1 stubb_kills        150w   208tok   8.5s  suspenseful=0.987 ominous=0.939 mysterious=0.929 oppressive=0.200
+v1 stubb_supper       150w   220tok   9.0s  ominous=0.993 suspenseful=0.968 oppressive=0.914 whimsical=0.487
+v1 castaway           150w   202tok   8.4s  suspenseful=0.974 melancholic=0.667 ominous=0.620 whimsical=0.241
+v1 squeeze            150w   202tok   8.7s  wondrous=0.151 whimsical=0.077 warm and cozy=0.063 mysterious=0.051
+v1 coffin             150w   204tok   8.8s  suspenseful=0.953 mysterious=0.927 ominous=0.890 melancholic=0.616
+v1 candles            150w   213tok   9.0s  ominous=0.995 suspenseful=0.994 wondrous=0.878 mysterious=0.585
+v1 symphony           150w   221tok   9.4s  wondrous=0.976 peaceful=0.832 warm and cozy=0.395 whimsical=0.126
+v1 catastrophe        150w   209tok   8.8s  ominous=0.973 suspenseful=0.853 mysterious=0.204 whimsical=0.186
+v1 loomings           300w   394tok  77.8s  wondrous=0.783 whimsical=0.756 mysterious=0.176 suspenseful=0.079
+v1 spouter_painting   300w   433tok  22.2s  mysterious=0.990 suspenseful=0.917 ominous=0.639 wondrous=0.143
+v1 spouter_landlord   300w   405tok  20.0s  melancholic=0.906 oppressive=0.851 suspenseful=0.618 mysterious=0.511
+v1 sermon             300w   416tok  21.4s  suspenseful=0.976 wondrous=0.744 ominous=0.576 oppressive=0.157
+v1 bosom_friend       300w   397tok  20.8s  mysterious=0.935 whimsical=0.690 wondrous=0.209 suspenseful=0.192
+v1 cetology           300w   417tok  33.6s  suspenseful=0.987 mysterious=0.982 wondrous=0.355 ominous=0.071
+v1 sunset             300w   460tok  23.5s  mysterious=0.990 suspenseful=0.969 ominous=0.934 wondrous=0.895
+v1 whiteness          300w   409tok  20.8s  mysterious=0.990 wondrous=0.816 suspenseful=0.778 whimsical=0.123
+v1 stubb_kills        300w   441tok  22.5s  suspenseful=0.988 ominous=0.978 mysterious=0.364 oppressive=0.156
+v1 stubb_supper       300w   460tok  30.0s  ominous=0.976 suspenseful=0.949 oppressive=0.947 whimsical=0.461
+v1 castaway           300w   426tok 164.2s  warm and cozy=0.681 whimsical=0.228 wondrous=0.163 mysterious=0.152
+v1 squeeze            300w   412tok 179.6s  peaceful=0.989 wondrous=0.944 warm and cozy=0.896 whimsical=0.512
+v1 coffin             300w   417tok  19.2s  suspenseful=0.990 ominous=0.983 oppressive=0.963 mysterious=0.923
+v1 candles            300w   430tok  20.8s  ominous=0.999 suspenseful=0.999 mysterious=0.853 oppressive=0.792
+v1 symphony           300w   445tok  22.4s  wondrous=0.992 whimsical=0.714 peaceful=0.545 warm and cozy=0.328
+v1 catastrophe        300w   436tok  21.7s  suspenseful=0.996 ominous=0.987 mysterious=0.452 oppressive=0.262
+Token indices sequence length is longer than the specified maximum sequence length for this model (943 > 512). Running this sequence through the model will result in indexing errors
+v1 loomings           700w   932tok  48.8s  wondrous=0.973 whimsical=0.941 mysterious=0.670 suspenseful=0.166
+v1 spouter_painting   700w   997tok  51.9s  mysterious=0.989 suspenseful=0.975 ominous=0.962 oppressive=0.461
+v1 spouter_landlord   700w   985tok  52.6s  suspenseful=0.990 mysterious=0.983 ominous=0.902 whimsical=0.772
+v1 sermon             700w   969tok  51.3s  suspenseful=0.985 wondrous=0.783 mysterious=0.635 ominous=0.347
+v1 bosom_friend       700w   901tok  46.6s  mysterious=0.972 whimsical=0.644 wondrous=0.634 peaceful=0.192
+v1 cetology           700w   990tok  52.8s  suspenseful=0.811 mysterious=0.808 wondrous=0.126 whimsical=0.077
+v1 sunset             700w  1052tok 148.6s  suspenseful=0.993 ominous=0.970 mysterious=0.931 wondrous=0.844
+v1 whiteness          700w   937tok 257.0s  mysterious=0.994 suspenseful=0.960 ominous=0.773 melancholic=0.057
+v1 stubb_kills        700w   954tok  49.5s  suspenseful=0.988 ominous=0.785 mysterious=0.160 whimsical=0.108
+v1 stubb_supper       700w  1111tok  59.5s  ominous=0.989 suspenseful=0.973 oppressive=0.905 whimsical=0.642
+v1 castaway           700w   999tok  52.3s  suspenseful=0.938 whimsical=0.482 mysterious=0.398 warm and cozy=0.158
+v1 squeeze            700w   956tok  50.9s  peaceful=0.979 wondrous=0.962 warm and cozy=0.910 whimsical=0.494
+v1 coffin             700w   949tok  49.4s  mysterious=0.992 suspenseful=0.983 wondrous=0.982 ominous=0.911
+v1 candles            700w  1046tok  55.8s  suspenseful=0.990 wondrous=0.977 mysterious=0.963 whimsical=0.928
+v1 symphony           700w  1020tok  54.7s  wondrous=0.982 peaceful=0.942 whimsical=0.574 melancholic=0.323
+v1 catastrophe        700w  1048tok 221.3s  suspenseful=0.992 ominous=0.985 mysterious=0.828 wondrous=0.748
+v2 loomings           300w   394tok  19.1s  whimsical=0.821 wondrous=0.780 warm and cozy=0.413 mysterious=0.370
+v2 spouter_painting   300w   433tok  20.8s  mysterious=0.977 suspenseful=0.884 ominous=0.491 wondrous=0.088
+v2 spouter_landlord   300w   405tok  21.2s  melancholic=0.782 mysterious=0.681 oppressive=0.540 whimsical=0.202
+v2 sermon             300w   416tok  20.0s  suspenseful=0.966 wondrous=0.785 mysterious=0.579 oppressive=0.074
+v2 bosom_friend       300w   397tok  19.7s  mysterious=0.956 whimsical=0.804 wondrous=0.320 suspenseful=0.140
+v2 cetology           300w   417tok  20.5s  mysterious=0.983 suspenseful=0.974 wondrous=0.791 whimsical=0.196
+v2 sunset             300w   460tok  22.6s  mysterious=0.983 suspenseful=0.965 ominous=0.888 wondrous=0.839
+v2 whiteness          300w   409tok  20.2s  mysterious=0.984 suspenseful=0.926 wondrous=0.844 whimsical=0.264
+v2 stubb_kills        300w   441tok  21.8s  suspenseful=0.972 ominous=0.908 mysterious=0.257 melancholic=0.099
+v2 stubb_supper       300w   460tok  22.9s  oppressive=0.968 ominous=0.966 suspenseful=0.959 whimsical=0.534
+v2 castaway           300w   426tok  21.3s  warm and cozy=0.898 suspenseful=0.513 wondrous=0.505 mysterious=0.491
+v2 squeeze            300w   412tok  20.5s  wondrous=0.954 peaceful=0.934 warm and cozy=0.907 mysterious=0.838
+v2 coffin             300w   417tok  20.9s  suspenseful=0.979 ominous=0.974 oppressive=0.962 mysterious=0.958
+v2 candles            300w   430tok  21.4s  ominous=0.997 suspenseful=0.996 mysterious=0.962 oppressive=0.758
+v2 symphony           300w   445tok  22.2s  wondrous=0.986 peaceful=0.964 whimsical=0.896 warm and cozy=0.847
+v2 catastrophe        300w   436tok  22.3s  suspenseful=0.992 ominous=0.980 mysterious=0.793 oppressive=0.596
+win  0 @    0w  mysterious=0.990 suspenseful=0.917 ominous=0.639 wondrous=0.143
+win  1 @  300w  ominous=0.993 mysterious=0.958 suspenseful=0.934 oppressive=0.555
+win  2 @  600w  ominous=0.986 oppressive=0.955 suspenseful=0.937 melancholic=0.879
+win  3 @  900w  ominous=0.858 melancholic=0.817 suspenseful=0.785 oppressive=0.756
+win  4 @ 1200w  suspenseful=0.997 mysterious=0.995 ominous=0.973 whimsical=0.964
+win  5 @ 1500w  wondrous=0.949 whimsical=0.947 mysterious=0.295 suspenseful=0.114
+win  6 @ 1800w  ominous=0.967 suspenseful=0.840 mysterious=0.816 whimsical=0.239
+win  7 @ 2100w  ominous=0.839 suspenseful=0.836 whimsical=0.385 mysterious=0.109
+win  8 @ 2400w  suspenseful=0.996 mysterious=0.984 ominous=0.958 whimsical=0.420
+win  9 @ 2700w  mysterious=0.972 suspenseful=0.969 ominous=0.872 oppressive=0.160
+win 10 @ 3000w  mysterious=0.983 suspenseful=0.962 ominous=0.953 whimsical=0.147
+win 11 @ 3300w  suspenseful=0.994 mysterious=0.971 whimsical=0.932 melancholic=0.915
+win 12 @ 3600w  mysterious=0.991 suspenseful=0.952 wondrous=0.454 whimsical=0.305
+win 13 @ 3900w  suspenseful=0.990 ominous=0.960 melancholic=0.790 mysterious=0.778
+win 14 @ 4200w  mysterious=0.992 suspenseful=0.901 wondrous=0.716 whimsical=0.372
+win 15 @ 4500w  ominous=0.999 mysterious=0.997 suspenseful=0.996 oppressive=0.949
+win  0 @    0w  wondrous=0.992 whimsical=0.714 peaceful=0.545 warm and cozy=0.328
+win  1 @  300w  wondrous=0.971 peaceful=0.901 warm and cozy=0.891 suspenseful=0.842
+win  2 @  600w  oppressive=0.971 ominous=0.968 melancholic=0.951 suspenseful=0.947
+win  3 @  900w  whimsical=0.981 warm and cozy=0.935 wondrous=0.883 suspenseful=0.569
+win  4 @ 1200w  mysterious=0.993 suspenseful=0.955 wondrous=0.922 whimsical=0.908
+win  5 @ 1500w  suspenseful=0.928 mysterious=0.631 ominous=0.420 wondrous=0.138
+win  6 @ 1800w  suspenseful=0.966 mysterious=0.842 whimsical=0.754 wondrous=0.213
+win  7 @ 2100w  suspenseful=0.998 ominous=0.974 mysterious=0.952 wondrous=0.858
+{
+  "model": "MoritzLaurer/ModernBERT-large-zeroshot-v2.0",
+  "revision": "a51e07b524299e309dd2b88d48b0cfa2bd9ec598",
+  "labels": [
+    "ominous",
+    "suspenseful",
+    "mysterious",
+    "melancholic",
+    "warm and cozy",
+    "peaceful",
+    "hopeful",
+    "oppressive",
+    "whimsical",
+    "wondrous"
+  ],
+  "templates": {
+    "v1": "The atmosphere of this passage is {}.",
+    "v2": "This passage creates a {} atmosphere."
+  },
+  "threads": 4,
+  "load_s": 7.9,
+  "peak_rss_mb": 2281,
+  "torch": "2.14.1+cu130",
+  "transformers": "4.57.6",
+  "cpu": "x86_64"
+}
