@@ -1,5 +1,9 @@
 """Option A, proper test: calibrated PERT-EmoPair + EmoLit vs. Qwen3-4B labels on several books.
 
+SUPERSEDED (2026-11-25) by eval/labeling (LABELING_GUIDE.md, labeling.ipynb): same books and
+segmentation, more models, a gold set. Kept for reference only; its data/ was removed before any
+labels or results existed (2 of 300 segments had been scored). Running it regenerates data/.
+
 Steps (each resumable; rerunning skips what is done):
 
   fetch     download the Gutenberg EPUBs of BOOKS into --books (outside the repo)
