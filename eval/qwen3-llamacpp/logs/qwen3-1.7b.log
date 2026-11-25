@@ -1,0 +1,21 @@
+=== CHAPTER 3. The Spouter-Inn. (dark painting, then comic), 712 words
+wall 27.4s | prompt 1425 tok in 20.3s (70.2 tok/s) | output 95 tok in 6.9s (13.7 tok/s)
+{"rationale": "The passage is filled with vivid imagery, eerie atmosphere, and a sense of mystery and suspense. It describes a strange, ominous painting and a dark, foreboding setting, with elements of fear and unease.", "valence": 2, "arousal": 2, "tension": 3, "tags": ["mysterious", "fear", "suspense"]}
+=== CHAPTER 93. The Castaway. (Pip: sad, horror), 709 words
+wall 22.1s | prompt 974 tok in 14.0s (69.7 tok/s) | output 112 tok in 7.9s (14.0 tok/s)
+{"rationale": "The passage describes a tragic event involving Pip, a black crew member of the Pequod, and the dangers of the whaling expedition. It conveys a sense of loss, melancholy, and the ominous threat of danger, with a focus on Pip's vulnerability and the impending danger that follows.", "valence": 2, "arousal": 2, "tension": 3, "tags": ["melancholic", "grief", "ominous"]}
+=== CHAPTER 119. The Candles. (storm: tense), 705 words
+wall 25.8s | prompt 1033 tok in 16.3s (63.4 tok/s) | output 128 tok in 9.3s (13.6 tok/s)
+{"rationale": "The passage describes a violent storm at sea, with vivid imagery of the Typhoon, the ship's struggle, and the characters' reactions. It has a melancholic and suspenseful tone, with elements of fear and uncertainty, but also a sense of humor and defiance from the characters. The overall mood is somber and tense, with a hint of hope at the end.", "valence": 3, "arousal": 3, "tension": 4, "tags": ["melancholic", "suspense", "fear"]}
+=== CHAPTER 94. A Squeeze of the Hand. (blissful, happy), 700 words
+wall 23.3s | prompt 943 tok in 13.5s (69.9 tok/s) | output 128 tok in 8.9s (14.3 tok/s)
+{"rationale": "The passage is filled with vivid imagery of the process of preparing sperm whale oil, with a sense of immersion and emotional connection to the task. The author describes a deeply personal and almost spiritual experience of working with the sperm, leading to a sense of unity and affection, despite the physical and emotional strain. The tone is warm, affectionate, and deeply emotional, with a sense", "valence": 4, "arousal": 3, "tension": 3, "tags": ["tender", "melancholic", "humorous"]}
+=== CHAPTER 10. A Bosom Friend. (warm, calm), 700 words
+wall 21.1s | prompt 897 tok in 12.8s (70.1 tok/s) | output 101 tok in 8.2s (12.3 tok/s)
+{"rationale": "The passage describes Queequeg's solitary, focused behavior and his philosophical indifference, highlighting his isolation and inner tranquility. The tone is contemplative and slightly melancholic, with a sense of wonder and admiration for his simplicity and resilience.", "valence": 3, "arousal": 2, "tension": 3, "tags": ["contemplative", "melancholic", "solemn"]}
+=== CHAPTER 132. The Symphony. (tender, melancholic), 703 words
+wall 21.4s | prompt 1003 tok in 15.7s (64.1 tok/s) | output 79 tok in 5.5s (14.2 tok/s)
+{"rationale": "The passage has a melancholic and somber tone with elements of nostalgia and reflection, but also a sense of emotional release and warmth.", "valence": 3, "arousal": 2, "tension": 3, "tags": ["melancholic", "grief", "solemn"]}
+=== Almost simultaneously, with a mighty volition (Ch. 135 catastrophe: frantic), 708 words
+wall 24.9s | prompt 1028 tok in 14.9s (69.0 tok/s) | output 115 tok in 8.2s (13.9 tok/s)
+{"rationale": "The passage is filled with intense imagery of a violent sea battle, the struggle between Ahab and the White Whale, and the emotional turmoil of the crew. It conveys a sense of foreboding, suspense, and the weight of a tragic fate, with a dominant mood of melancholic and ominous tension.", "valence": 4, "arousal": 4, "tension": 5, "tags": ["melancholic", "ominous", "suspense"]}

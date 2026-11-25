@@ -16,6 +16,8 @@ Gyenge pontok:
 - **tagválasztás:** érzékeny a prompt apró változásaira;
 - **confidence:** a modell nem tudja megítélni, ezért kivettük a kimenetből.
 
+Egy kisebb modell (**Qwen3-1.7B**) 3–4-szer gyorsabb volt, de a minősége láthatóan rosszabb, ezért maradunk a 4B-nél (lásd „Összevetés: Qwen3-1.7B”).
+
 ## Miért ez a megközelítés?
 
 Az előző körben vizsgált feladatspecifikus modellekkel ezek voltak a gondok:
@@ -154,6 +156,47 @@ Másodperc szegmensenként (falióra-idő; bemenet kb. 900–1400 token, kimenet
 - A `llama-server` kb. 2,6–2,9 GB-ot foglal (RSS). Mellette a WSL 5 GB-jából 1 GB swap folyamatosan foglalt volt.
 - A `-c 4096` → `-c 2048` váltás kb. 300 MB-tal csökkentette a kontextus memóriaigényét. Egy kb. 1,5k tokenes kéréshez (prompt + szegmens + válasz) a 2048 elég.
 - **Az első betöltés kb. 4,5 percig tartott** (a súlyok átrendezése a CPU-hoz, szűk memória mellett). Az újraindítás utáni betöltés gyorsabb volt.
+- **A pluginba építve, a teljes fejlesztői környezettel együtt** (`tauri dev`: WebKit és Vite, valamint a VS Code WSL-szervere) az 5 GB nem volt elég (2026-10-31): a swap megtelt (2,0/2,0 GB, ebből 542 MB maga a modell), a válaszírás 6,4 → 2,1 → 0,66 token/s-re esett, és két kérés a plugin 10 perces időkorlátjába futott. Ez indította a kisebb modell kipróbálását (lent).
+
+## Összevetés: Qwen3-1.7B
+
+*2026-10-31.* Cél: kiderül-e, hogy egy kisebb modell elég jó, hogy elférjen a fejlesztői környezet mellett.
+
+**Beállítás:**
+- `unsloth/Qwen3-1.7B-GGUF`, `Qwen3-1.7B-Q4_K_M.gguf` (1,11 GB, Apache-2.0); ugyanaz a szerver-parancs (`-c 2048 -t 4`), ugyanaz a 4. prompt, séma és 7 részlet.
+- A Qwen3-1.7B-hez nincs „2507 Instruct” (gondolkodás nélküli) kiadás, csak a hibrid modell. Ezért a kérésbe bekerült a `"chat_template_kwargs": {"enable_thinking": false}`; a repóban lévő `llm_probe.py` ezt nem tartalmazza.
+- Nyers kimenet: [`logs/qwen3-1.7b.log`](logs/qwen3-1.7b.log).
+
+**Sebesség és memória:**
+
+| | Qwen3-4B-Instruct-2507 | Qwen3-1.7B |
+|---|---|---|
+| Idő szegmensenként | 50–100 s meleg állapotban, kiugrásokkal 2–6 percig | **21–27 s**, egyenletesen |
+| Bemenet feldolgozása | 20–27 token/s | 63–70 token/s |
+| Válasz írása | 5–7 token/s | 12–14 token/s |
+| Betöltés | kb. 4,5 perc | 45 s |
+| Memória (RSS) | kb. 2,7 GB | kb. 2,0 GB (a fájlméret alapján vártnál kisebb megtakarítás) |
+
+**Minőség (V / A / T):**
+
+| Részlet | Várt | 4B (4. kör) | 1.7B | 1.7B tagjei |
+|---|---|---|---|---|
+| Spouter-Inn eleje | sötét festmény | 2 / 4 / 4 | 2 / 2 / 3 | mysterious, fear, suspense |
+| Pip | szomorú, rémisztő | 2 / 4 / 4 | 2 / 2 / 3 | melancholic, grief, ominous |
+| Vihar | feszült | 3 / 4 / 4 | 3 / 3 / 4 | melancholic, suspense, fear |
+| A Squeeze of the Hand | boldog | 5 / 3 / 1 | 4 / 3 / **3** | tender, melancholic, humorous |
+| A Bosom Friend | meleg, nyugodt | 4 / 2 / 2 | 3 / 2 / 3 | contemplative, melancholic, solemn |
+| The Symphony | gyengéd, melankolikus | 3 / 2 / 3 | 3 / 2 / 3 | melancholic, grief, solemn |
+| Katasztrófa | eszeveszett | 2 / 5 / 5 | **4** / 4 / 5 | melancholic, ominous, suspense |
+
+**Felfedezések:**
+- A JSON 7/7 érvényes, a szerkezetet a séma itt is garantálja.
+- **A katasztrófa valence-e 4 (kellemes)**: egyértelmű hiba.
+- **A skálák összenyomódnak:** a tension szinte mindenhol 3–5, a boldog „Squeeze of the Hand” is 3-at kapott (a 4B 1-et); 1-es és 5-ös valence/arousal szinte nincs. A zenéhez legfontosabb különbségek (nyugodt ↔ feszült, kellemes ↔ sötét) gyengén válnak el.
+- **A „melancholic” 7-ből 6 részletnél** szerepel.
+- **Az indoklások hosszúak** (30–70 szó a kért 20 helyett), inkább tartalom-összefoglalók, és egy a 400 karakteres korlátnál mondat közepén elvágódott.
+
+**Döntés:** a végleges elemzés a **4B marad**. Az 1.7B legfeljebb a plugin működésének (cache, sor, hibakezelés) gyors tesztelésére jó; ehhez a pluginnak is el kellene küldenie az `enable_thinking: false`-t. A memóriagondra a 4B mellett más megoldás kell: tesztelés közben a VS Code bezárása, `memory=6GB`, vagy a 4B Q3_K_M változata (2,1 GB, nem mértük).
 
 ## Pozitívumok
 - **Teljes séma egy hívásban:** valence, arousal, tension, tagek és indoklás.
@@ -230,5 +273,5 @@ Az indoklás szándékosan az első mező: a modell előbb megfogalmazza a hangu
 3. **Később:**
    - a tag-lista véglegesítése a zenei leképezéssel együtt (4. mérföldkő);
    - kézi címkék nagyobb mintán (10–20 szegmens) és egyezésmérés;
-   - a Qwen3-1.7B kipróbálása tartaléknak, ha a sebesség vagy a memória nem elég;
+   - ~~a Qwen3-1.7B kipróbálása tartaléknak~~: kipróbálva, a minősége nem elég (lásd fent); helyette a 4B Q3_K_M változata mérhető;
    - a `llama-server` indítása sidecarként.
