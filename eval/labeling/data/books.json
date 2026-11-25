@@ -240,22 +240,6 @@
     "median_words": 774
   },
   {
-    "key": "threemen",
-    "gutenberg": 308,
-    "file": "pg308-three-men-in-a-boat.epub",
-    "title": "Three Men in a Boat",
-    "author": "Jerome K. Jerome",
-    "died": 1927,
-    "split": "train",
-    "title_found": "Three men in a boat (to say nothing of the dog)",
-    "segments": 99,
-    "plugin_words": 69821,
-    "eligible": 91,
-    "selected": 91,
-    "gold": 0,
-    "median_words": 762
-  },
-  {
     "key": "littlewomen",
     "gutenberg": 514,
     "file": "pg514-little-women.epub",
@@ -368,22 +352,6 @@
     "median_words": 754
   },
   {
-    "key": "greengables",
-    "gutenberg": 45,
-    "file": "pg45-anne-of-green-gables.epub",
-    "title": "Anne of Green Gables",
-    "author": "L. M. Montgomery",
-    "died": 1942,
-    "split": "train",
-    "title_found": "Anne of Green Gables",
-    "segments": 149,
-    "plugin_words": 105549,
-    "eligible": 140,
-    "selected": 120,
-    "gold": 0,
-    "median_words": 745
-  },
-  {
     "key": "frankenstein",
     "gutenberg": 84,
     "file": "pg84-frankenstein.epub",
@@ -444,7 +412,7 @@
     "plugin_words": 215845,
     "eligible": 335,
     "selected": 335,
-    "gold": 38,
+    "gold": 30,
     "median_words": 686
   },
   {
@@ -460,7 +428,7 @@
     "plugin_words": 62309,
     "eligible": 80,
     "selected": 80,
-    "gold": 38,
+    "gold": 30,
     "median_words": 757
   },
   {
@@ -476,23 +444,39 @@
     "plugin_words": 88586,
     "eligible": 121,
     "selected": 121,
-    "gold": 37,
+    "gold": 30,
     "median_words": 766
   },
   {
-    "key": "holmes",
-    "gutenberg": 1661,
-    "file": "pg1661-adventures-of-sherlock-holmes.epub",
-    "title": "Adventures of Sherlock Holmes",
-    "author": "Arthur Conan Doyle",
-    "died": 1930,
+    "key": "threemen",
+    "gutenberg": 308,
+    "file": "pg308-three-men-in-a-boat.epub",
+    "title": "Three Men in a Boat",
+    "author": "Jerome K. Jerome",
+    "died": 1927,
     "split": "test",
-    "title_found": "The Adventures of Sherlock Holmes",
-    "segments": 146,
-    "plugin_words": 107575,
-    "eligible": 136,
-    "selected": 136,
-    "gold": 37,
-    "median_words": 768
+    "title_found": "Three men in a boat (to say nothing of the dog)",
+    "segments": 99,
+    "plugin_words": 69821,
+    "eligible": 91,
+    "selected": 91,
+    "gold": 30,
+    "median_words": 762
+  },
+  {
+    "key": "greengables",
+    "gutenberg": 45,
+    "file": "pg45-anne-of-green-gables.epub",
+    "title": "Anne of Green Gables",
+    "author": "L. M. Montgomery",
+    "died": 1942,
+    "split": "test",
+    "title_found": "Anne of Green Gables",
+    "segments": 149,
+    "plugin_words": 105549,
+    "eligible": 140,
+    "selected": 140,
+    "gold": 30,
+    "median_words": 745
   }
 ]

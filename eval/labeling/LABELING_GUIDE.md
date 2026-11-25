@@ -70,7 +70,7 @@ Not legal advice. Re-check before the full run.
 
 Verify every ID at `https://www.gutenberg.org/ebooks/<id>` before downloading.
 
-### Train (24): labelled by the winning combination, no hand labels
+### Train (22): labelled by the winning combination, no hand labels
 
 | ID | Title | Author | Main moods |
 |---|---|---|---|
@@ -89,7 +89,6 @@ Verify every ID at `https://www.gutenberg.org/ebooks/<id>` before downloading.
 | 36 | The War of the Worlds | Wells | chaos, fear, violence |
 | 219 | Heart of Darkness | Conrad | ominous, contemplative |
 | 1184 | The Count of Monte Cristo | Dumas (anon. transl.) | suspense, anger, triumph |
-| 308 | Three Men in a Boat | Jerome | humorous, calm |
 | 514 | Little Women | Alcott | tender, cheerful, grief |
 | 215 | The Call of the Wild | London | violence, triumph |
 | 110 | Tess of the d'Urbervilles | Hardy | grief, melancholic |
@@ -97,7 +96,6 @@ Verify every ID at `https://www.gutenberg.org/ebooks/<id>` before downloading.
 | 209 | The Turn of the Screw | James | mysterious, ominous |
 | 289 | The Wind in the Willows | Grahame | calm, cheerful |
 | 2166 | King Solomon's Mines | Haggard | suspense, violence, triumph |
-| 45 | Anne of Green Gables | Montgomery | cheerful, tender, humorous |
 
 ### Validation (3): gold set part A, used to fit C4 and the 1–5 mappings
 
@@ -107,14 +105,20 @@ Verify every ID at `https://www.gutenberg.org/ebooks/<id>` before downloading.
 | 550 | Silas Marner | Eliot |
 | 60 | The Scarlet Pimpernel | Orczy |
 
-### Test (4): gold set part B, final numbers only
+### Test (5): gold set part B, final numbers only
 
-| ID | Title | Author |
-|---|---|---|
-| 2701 | Moby Dick | Melville |
-| 2852 | The Hound of the Baskervilles | Conan Doyle |
-| 175 | The Phantom of the Opera | Leroux (transl. de Mattos) |
-| 1661 | The Adventures of Sherlock Holmes | Conan Doyle |
+| ID | Title | Author | Main moods |
+|---|---|---|---|
+| 2701 | Moby Dick | Melville | contemplative, solemn, violence |
+| 2852 | The Hound of the Baskervilles | Conan Doyle | mysterious, ominous, suspense |
+| 175 | The Phantom of the Opera | Leroux (transl. de Mattos) | fear, mysterious, tender |
+| 308 | Three Men in a Boat | Jerome | humorous, calm |
+| 45 | Anne of Green Gables | Montgomery | cheerful, tender, humorous |
+
+Three Men in a Boat and Anne of Green Gables were moved here from train (2026-11-25, before
+any scoring), so the test covers comic and warm moods, not only dark and tense ones. The
+Adventures of Sherlock Holmes was dropped (a second Conan Doyle; in train it would put an
+author in both splits).
 
 Each author is in only one split, so the test also measures generalisation to unseen authors.
 

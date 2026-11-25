@@ -3,6 +3,11 @@
 Every author and translator died before 1956, so the books are public domain in the EU and the
 US. The Gutenberg ids were written from memory: `fetch()` checks each downloaded title against
 the expected one, so a wrong id is caught instead of labelling the wrong book.
+
+Test set (changed 2026-11-25, before anything was scored or labelled): Three Men in a Boat (comedy)
+and Anne of Green Gables (warm) moved there from train, so the test covers comic and warm moods
+too, not only dark and tense ones. The Adventures of Sherlock Holmes was dropped: a second Conan
+Doyle in test was redundant, and in train it would put an author in both splits.
 """
 import os
 import re
@@ -30,7 +35,6 @@ BOOKS = [
     ("worlds", 36, "pg36-war-of-the-worlds.epub", "War of the Worlds", "H. G. Wells", 1946, "train"),
     ("darkness", 219, "pg219-heart-of-darkness.epub", "Heart of Darkness", "Joseph Conrad", 1924, "train"),
     ("montecristo", 1184, "pg1184-monte-cristo.epub", "Monte Cristo", "Alexandre Dumas (anon. transl.)", 1870, "train"),
-    ("threemen", 308, "pg308-three-men-in-a-boat.epub", "Three Men in a Boat", "Jerome K. Jerome", 1927, "train"),
     ("littlewomen", 514, "pg514-little-women.epub", "Little Women", "Louisa May Alcott", 1888, "train"),
     ("callwild", 215, "pg215-call-of-the-wild.epub", "Call of the Wild", "Jack London", 1916, "train"),
     ("tess", 110, "pg110-tess.epub", "Tess of the d'Urbervilles", "Thomas Hardy", 1928, "train"),
@@ -38,7 +42,6 @@ BOOKS = [
     ("screw", 209, "pg209-turn-of-the-screw.epub", "Turn of the Screw", "Henry James", 1916, "train"),
     ("willows", 289, "pg289-wind-in-the-willows.epub", "Wind in the Willows", "Kenneth Grahame", 1932, "train"),
     ("solomon", 2166, "pg2166-king-solomons-mines.epub", "King Solomon's Mines", "H. Rider Haggard", 1925, "train"),
-    ("greengables", 45, "pg45-anne-of-green-gables.epub", "Anne of Green Gables", "L. M. Montgomery", 1942, "train"),
     # validation
     ("frankenstein", 84, "pg84-frankenstein.epub", "Frankenstein", "Mary Shelley", 1851, "validation"),
     ("silasmarner", 550, "pg550-silas-marner.epub", "Silas Marner", "George Eliot", 1880, "validation"),
@@ -47,7 +50,8 @@ BOOKS = [
     ("moby", None, "moby_dick.epub", "Moby", "Herman Melville", 1891, "test"),
     ("baskervilles", 2852, "pg2852-hound-of-the-baskervilles.epub", "Hound of the Baskervilles", "Arthur Conan Doyle", 1930, "test"),
     ("phantom", 175, "pg175-phantom-of-the-opera.epub", "Phantom of the Opera", "Gaston Leroux (transl. A. Teixeira de Mattos)", 1927, "test"),
-    ("holmes", 1661, "pg1661-adventures-of-sherlock-holmes.epub", "Adventures of Sherlock Holmes", "Arthur Conan Doyle", 1930, "test"),
+    ("threemen", 308, "pg308-three-men-in-a-boat.epub", "Three Men in a Boat", "Jerome K. Jerome", 1927, "test"),
+    ("greengables", 45, "pg45-anne-of-green-gables.epub", "Anne of Green Gables", "L. M. Montgomery", 1942, "test"),
 ]
 FIELDS = ["key", "gutenberg", "file", "title", "author", "died", "split"]
 
