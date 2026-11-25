@@ -9,6 +9,10 @@ use rbook::Epub;
 use scraper::{Html, Node, Selector};
 use sha2::{Digest, Sha256};
 
+/// Part of the analysis cache key: bump it whenever the segmentation changes,
+/// otherwise cached results would belong to different text under the same `seg_index`.
+pub const SEGMENTER_VERSION: u32 = 1;
+
 /// Segment size in words. Segments are cut only at paragraph boundaries, so these are soft limits.
 const MIN_WORDS: usize = 300;
 const MAX_WORDS: usize = 800;

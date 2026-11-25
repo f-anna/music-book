@@ -5,11 +5,18 @@ use tauri::{
     plugin::{Builder, TauriPlugin},
 };
 
+mod analysis;
 mod commands;
 mod epub;
 mod models;
+mod store;
+mod worker;
 
 pub use models::*;
+
+use analysis::LlamaCppAnalyzer;
+use store::Store;
+use worker::Worker;
 
 /// The state shared by the commands.
 #[derive(Default)]
@@ -31,6 +38,20 @@ pub fn init<R: Runtime>() -> TauriPlugin<R> {
         ])
         .setup(|app, _api| {
             app.manage(Mutex::new(Session::default()));
+
+            let db_path = app.path().app_data_dir()?.join("soundtrack").join("soundtrack.db");
+            let store = match Store::open(&db_path) {
+                Ok(store) => {
+                    eprintln!("[soundtrack] analysis cache: {}", db_path.display());
+                    store
+                }
+                Err(e) => {
+                    eprintln!("[soundtrack] cannot open {}: {e}; analyses are not kept", db_path.display());
+                    Store::in_memory()?
+                }
+            };
+            let analyzer = LlamaCppAnalyzer::from_env()?;
+            app.manage(Worker::spawn(store, Box::new(analyzer)));
             Ok(())
         })
         .build()

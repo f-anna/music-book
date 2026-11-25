@@ -36,7 +36,8 @@ Egyetemi projekt. Egy e-book olvasóhoz készülő funkció, amely az olvasott s
 - [x] **Csúszka-fókusz javítása** (fork PR #5, `fix-scrubber-focus`), lásd „Ismert buktatók”.
 - [x] **2. mérföldkő kész** (fő repó PR #2, `open-book`; fork PR #6): `open_book`/`close_book`, `epub.rs`, Locator → szegmens, bekötve és az appban kipróbálva.
 - [x] **EPUB crate döntés** (2. mérföldkő eleje): `rbook` a konténerhez, `scraper` a szöveghez; a spine-indexelés egyezése a Foliate-tel kipróbálva.
-- [x] **Elemző modell döntés** (3. mérföldkő eleje): a feladatspecifikus enkóder modellek elvetve ([`eval/model-selection/RESULTS.md`](eval/model-selection/RESULTS.md)), helyettük Qwen3-4B-Instruct-2507 + llama.cpp, négy prompt-iteráció után ([`eval/qwen3-llamacpp/RESULTS.md`](eval/qwen3-llamacpp/RESULTS.md)). Plugin-kód még nincs hozzá.
+- [x] **Elemző modell döntés** (3. mérföldkő eleje): a feladatspecifikus enkóder modellek elvetve ([`eval/model-selection/RESULTS.md`](eval/model-selection/RESULTS.md)), helyettük Qwen3-4B-Instruct-2507 + llama.cpp, négy prompt-iteráció után ([`eval/qwen3-llamacpp/RESULTS.md`](eval/qwen3-llamacpp/RESULTS.md)).
+- [ ] **Hangulatelemzés a pluginban** (ág: `mood-analysis`): a kód kész, a `cargo check` tiszta; az appban még nincs kipróbálva. Részletek a 3. mérföldkőnél.
 
 ## Félév scope (önlab)
 
@@ -175,7 +176,7 @@ pub struct StoryState {
 ### A plugin API-ja (tervezett)
 
 - **Commandok:** `open_book(bytes)` (raw body; a plugin hash-el, és az app data mappába cache-eli az EPUB-ot, a `bookId` = hash), `report_location(location)`, `close_book()`, `set_settings(enabled, volume, intensity)`, `get_debug_state()`
-- **Eventek:** `soundtrack://mood-changed`, `soundtrack://mix-changed` (frontend audio esetén), `soundtrack://analysis-progress`
+- **Eventek** (még nincsenek; az elemzés eredménye egyelőre csak a konzolra megy): `soundtrack://mood-changed`, `soundtrack://mix-changed` (frontend audio esetén), `soundtrack://analysis-progress`
 
 ### Adatbázis (vázlat, saját SQLite fájl)
 
@@ -306,11 +307,16 @@ Cél: lapozás → adapter → plugin command → a Rust terminálban megjelenik
       -c 2048 -t 4 --host 127.0.0.1 --port 8080 > ~/llama-server.log 2>&1 &
     ```
 - [x] `MoodAnalysis` séma (prototípus): lásd „Strukturált kimenet”. A tag-lista ideiglenes.
-- [ ] `models.rs`: a modell kimenetének típusa és a `MoodVector`, az 1–5 → skála leképezéssel.
-- [ ] `analysis/`: `MoodAnalyzer` trait + `LlamaCppAnalyzer` (`reqwest`, `/v1/chat/completions`, `temperature 0`, `seed 42`, `response_format: json_schema`, a 4. prompt). A szerver címe beállítható (alapértelmezés `http://127.0.0.1:8080`). Tiszta Rust, `tauri` nélkül.
-- [ ] Validálás (tartomány, tag-lista), 1–2 újrapróbálás, végül `confidence = 0`.
-- [ ] SQLite cache (`store.rs`): saját fájl az app data mappában, `rusqlite` (`bundled`); kulcs `(book_hash, seg_index, model_id, prompt_version)` → kimenet (JSON) + időbélyeg.
-- [ ] Bekötés a `report_location`-be: cache-ből, vagy háttér-worker elemzi (mindig a legfrissebb pozíció szegmense, utána a következő előre); a command soha nem vár a modellre. Konzolra: `[soundtrack] analysis #N V/A/T tags (cache|model, X s)`.
+- [x] `models.rs`: `Tag` enum (a 16 tag és definícióik, a lista egyetlen forrása), `MoodAnalysis` (a modell nyers válasza, `validate()`), `MoodVector` (`From<&MoodAnalysis>` a fenti képletekkel, `neutral()`).
+- [x] `analysis/` (tiszta Rust, **blokkoló**, mert a háttérszálon fut):
+  - `MoodAnalyzer` trait (`model_id()`, `analyze(text)`) és `AnalysisError` (`Unavailable` / `Http` / `Invalid`);
+  - `prompt.rs`: `PROMPT_VERSION = 4`, a 4. prompt szó szerint, a séma **struktúraként** (nem `serde_json::Value`, mert az ábécérendbe tenné a mezőket, és a `rationale`-nek elsőnek kell lennie);
+  - `llama_cpp.rs`: `reqwest::blocking`, `POST /v1/chat/completions`, `temperature 0`, `max_tokens 300`, 10 perc időkorlát. Környezeti változók: `SOUNDTRACK_LLM_URL` (alapértelmezés `http://127.0.0.1:8080`), `SOUNDTRACK_LLM_MODEL` (csak a cache-kulcsba kerül).
+- [x] Validálás és újrapróbálás: érvénytelen válasznál legfeljebb 2-szer, **más seeddel** (42, 43, 44), mert 0 hőmérsékleten ugyanaz a seed ugyanazt adná. Kapcsolódási hibánál és 503-nál („a modell töltődik”) nincs újrapróbálás.
+- [x] `store.rs`: `app_data_dir()/soundtrack/soundtrack.db`, `rusqlite` 0.39 (`bundled`), tábla `segment_analysis`, kulcs `(book_hash, seg_index, segmenter_version, model_id, prompt_version)`; mellette a szegmens helye (szakasz, bájt-offsetek), az elemzés ideje és az időbélyeg. Hibás eredmény nem kerül a cache-be. Ha a fájl nem nyitható meg, memóriabeli adatbázissal megy tovább.
+- [x] `worker.rs`: egy háttérszál (`soundtrack-analysis`). A `request(book, seg)` **azonnal** megnézi a cache-t: ha az aktuális szegmens benne van, rögtön kiírja (`via=cache`); a sorba csak a hiányzó szegmensek kerülnek (az aktuális és a következő), és ez lecseréli a korábbi sort (a legfrissebb pozíció nyer; az ugyanazon szegmensen belüli lapozást figyelmen kívül hagyja). A store egy `Mutex` mögött van, a szál csak az olvasás/írás idejére zárja, a modellhívás alatt nem. `clear()` a `close_book`-nál. Egy már futó elemzést nem szakít meg. (Az első változatban a cache-ellenőrzés is a sorban várt, így egy futó, perces modellelemzés alatt a cache-találatok késtek vagy el is vesztek.) Konzolra: `[soundtrack] analysis #N via=cache|model [X s] V= A= T= tags=[…] "indoklás"`.
+- [x] Bekötés: a `lib.rs` `setup` létrehozza a store-t, az elemzőt és a workert; a `report_location` és az `open_book` (függő locator) hívja a `worker.request`-et, a `close_book` a `worker.clear`-t. Új függőségek: `reqwest` 0.13 (`blocking`, `json`, TLS nélkül), `rusqlite` 0.39 (`bundled`), `serde_json`.
+- [ ] Kipróbálás az appban (`llama-server` fut). Eddig (2026-10-31, Moby Dick): model → SQLite → `via=cache` a könyv újranyitása után ✅; előre-elemzés (#275 → #276) ✅; szegmensen belüli lapozás nem indít új kérést ✅. A kérések memóriahiány miatt lelassultak (lásd „Ismert buktatók”: LLM és dev környezet együtt). Hátra van: a cache-javítás próbája, és a leállított szerver mellett az app működése.
 - [ ] Opcionális második implementáció összehasonlításhoz: NRC VAD lexikon, vagy a Qwen3-1.7B (gyorsabb, kisebb tartalék).
 - [ ] Kézzel címkézett ground truth néhány fejezetre, és egy egyszerű metrika (pl. korreláció a valence/arousal értékekkel).
 
@@ -352,6 +358,7 @@ Cél: lapozás → adapter → plugin command → a Rust terminálban megjelenik
 - **Kevés memória (WSL):** a párhuzamos Tauri build OOM-mel elhal (exit 137). Megoldás: `cargo build -j 2`, vagy tartósan `CARGO_BUILD_JOBS=2` / `[build] jobs = 2` a `~/.cargo/config.toml`-ban (a `tauri dev` is ezt használja).
 - **`.wslconfig` (`C:\Users\Anna\.wslconfig`):** a WSL memóriája 3,7 GB-ról 5 GB-ra emelve az LLM miatt (`[wsl2] memory=5GB`, `[experimental] autoMemoryReclaim=gradual`). A gép 7,7 GB-jából így a Windowsnak kb. 2,7 GB marad, mérés közben érdemes a böngészőt bezárni. Életbe lépés: PowerShellben `wsl --shutdown` (minden WSL-folyamat leáll). Visszaállítás: a fájl törlése és újabb `wsl --shutdown`.
 - **A `/tmp` tmpfs (memóriában van):** a `wsl --shutdown` vagy újraindítás kiüríti, és a RAM-ot foglalja. Nagy fájl (virtuális környezet, modell) és megőrzendő szkript ne kerüljön oda.
+- **Memória: LLM + teljes dev környezet:** a `tauri dev` (WebKit, Vite) és a VS Code WSL-szervere mellett a `llama-server` (kb. 2,7 GB) az 5 GB-os WSL-ben **nem fér el**: a swap megtelt (2,0/2,0 GB), a modell súlyainak egy része is kikerült, a válaszírás 6,4 → 0,66 token/s-re esett, két kérés a 10 perces időkorlátba futott. Megoldási lehetőségek: tesztelés közben a VS Code bezárása, több memória a WSL-nek (`memory=6GB`), a 4B Q3_K_M változata (2,1 GB, nem mértük), vagy a `llama-server` futtatása a Windows oldalon. A **Qwen3-1.7B kipróbálva** (21–27 s/szegmens, 3–4-szer gyorsabb), de a minősége nem elég: összenyomott skálák, a katasztrófa valence-e pozitív, a „melancholic” szinte mindenhol (lásd [`eval/qwen3-llamacpp/RESULTS.md`](eval/qwen3-llamacpp/RESULTS.md), „Összevetés: Qwen3-1.7B”).
 - **`llama-server`:**
   - Ha a VS Code termináljában fut, a terminállal (vagy a munkamenettel) együtt leáll; két mérés is így szakadt félbe. Háttérben indítsd: `nohup … > ~/llama-server.log 2>&1 &`, leállítás: `pkill llama-server`.
   - Az első betöltés kb. 4,5 perc lehet (szűk memória), az első kérés egy (újra)indítás után 2–4 perc. A kontextus `-c 2048` (a `4096` kb. 300 MB-tal többet foglal, és a kb. 1,5k tokenes kéréshez nem kell).
@@ -374,4 +381,7 @@ Cél: lapozás → adapter → plugin command → a Rust terminálban megjelenik
 - **A fejléc nyilai (← →) nem lapoznak:** a „Show sidebar” melletti gombok a navigációs előzmények (Vissza/Előre, `HeaderBar.tsx`). Könyvnyitáskor és sima lapozás után szürkék (a lapozás `replaceState`), csak ugrás (TOC, link, csúszka, könyvjelző) után lesz aktív a ←. Ez várt viselkedés, nem hiba.
 - **Üres `text.highlight`:** a fejezetek elején (pl. `progression=0.000`) a látható range üres lehet (`text=""`). Ilyenkor a Locator → szegmens leképezés a `progression`-alapú tartalékot használja.
 - **Spine-indexelés (`rbook` ↔ Foliate):** a Foliate a `linear="no"` spine elemeket is beszámozza (csak a manifestből hiányzókat hagyja ki), az `rbook` `spine()`-ja szintén. Az `rbook` `reader()`-ét **nem szabad** `LinearBehavior::LinearOnly`-val használni, mert az kihagyja ezeket, és minden `sectionIndex` elcsúszik. A href-ek közti egyetlen eltérés: az `rbook` `/`-rel kezdi (`/OEBPS/x.xhtml`), a Foliate `id`-ja nem (`OEBPS/x.xhtml`); mindkettő dekódolt.
+- **Elemzés-cache verziói:** a `segment_analysis` kulcsában benne van az `epub::SEGMENTER_VERSION` és az `analysis::prompt::PROMPT_VERSION`. Ha a szegmentálás vagy a prompt/séma változik, **emelni kell** a megfelelő konstanst, különben a régi eredmények más szöveghez vagy más prompthoz tartoznának.
+- **SQLite-verzió a hosttal közös:** a FolioReader `sqlx` 0.9-e `libsqlite3-sys` `<0.38`-at kér, és egy binárisban csak egy `libsqlite3-sys` lehet (`links = "sqlite3"`). Ezért a plugin `rusqlite` 0.39-et használ (→ `libsqlite3-sys` 0.37), a 0.41 (→ 0.39) a `tauri dev`-nél verzióütközéssel elbukott. A plugin önálló `cargo check`-je ezt **nem** mutatja ki; függőség-módosítás után a hostban is ellenőrizni kell: `cd hosts/folioreader/src-tauri && cargo tree -i libsqlite3-sys -e normal`.
+- **`reqwest::blocking`:** saját futtatókörnyezetet indít, ezért tokio-taskból (pl. async commandból) nem szabad hívni; csak a worker saját szálán fut.
 - **A könyvforrás File/Blob:** a FolioReader `bookSource`-a nem mindig fájlútvonal (Androidon főleg nem), ezért az `open_book` bájtokat kap, nem útvonalat.

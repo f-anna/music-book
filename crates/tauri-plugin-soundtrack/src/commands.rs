@@ -8,14 +8,16 @@ use tauri::{
 };
 
 use crate::Session;
-use crate::epub::{self, Book};
+use crate::epub::{self, Book, Position};
 use crate::models::LocationEvent;
+use crate::worker::Worker;
 
 /// Receives the EPUB as a raw body, and returns its id (the same as the adapter's `bookId`).
 #[command]
 pub(crate) async fn open_book<R: Runtime>(
     app: AppHandle<R>,
     session: State<'_, Mutex<Session>>,
+    worker: State<'_, Worker>,
     request: Request<'_>,
 ) -> Result<String, String> {
     let InvokeBody::Raw(bytes) = request.body() else {
@@ -61,14 +63,15 @@ pub(crate) async fn open_book<R: Runtime>(
         session.book = Some(book.clone());
         session.pending_location.take().filter(|l| l.locator.book_id == book.id)
     };
-    if let Some(location) = pending {
-        print_segment(&book, &location);
+    if let Some(position) = pending.and_then(|location| print_segment(&book, &location)) {
+        worker.request(&book, position.segment);
     }
     Ok(book.id.clone())
 }
 
 #[command]
-pub(crate) fn close_book(session: State<'_, Mutex<Session>>) {
+pub(crate) fn close_book(session: State<'_, Mutex<Session>>, worker: State<'_, Worker>) {
+    worker.clear();
     let mut session = session.lock().unwrap();
     *session = Session {
         generation: session.generation + 1,
@@ -77,7 +80,7 @@ pub(crate) fn close_book(session: State<'_, Mutex<Session>>) {
 }
 
 #[command]
-pub(crate) fn report_location(session: State<'_, Mutex<Session>>, location: LocationEvent) {
+pub(crate) fn report_location(session: State<'_, Mutex<Session>>, worker: State<'_, Worker>, location: LocationEvent) {
     print_location(&location);
     let book = {
         let mut session = session.lock().unwrap();
@@ -88,7 +91,9 @@ pub(crate) fn report_location(session: State<'_, Mutex<Session>>, location: Loca
         book
     };
     if let Some(book) = book {
-        print_segment(&book, &location);
+        if let Some(position) = print_segment(&book, &location) {
+            worker.request(&book, position.segment);
+        }
     }
 }
 
@@ -120,7 +125,7 @@ fn print_location(location: &LocationEvent) {
     );
 }
 
-fn print_segment(book: &Book, location: &LocationEvent) {
+fn print_segment(book: &Book, location: &LocationEvent) -> Option<Position> {
     let locator = &location.locator;
     let section_index = locator.section_index as usize;
     if let Some(section) = book.sections.get(section_index).filter(|s| s.href != locator.href) {
@@ -132,7 +137,7 @@ fn print_segment(book: &Book, location: &LocationEvent) {
     let highlight = locator.text.as_ref().and_then(|t| t.highlight.as_deref());
     let Some(position) = book.locate(section_index, highlight, locator.progression) else {
         eprintln!("[soundtrack] segment none (section {section_index} has no text)");
-        return;
+        return None;
     };
     let segment = &book.segments[position.segment];
     let preview: String = book.segment_text(segment).chars().take(80).collect();
@@ -140,6 +145,7 @@ fn print_segment(book: &Book, location: &LocationEvent) {
         "[soundtrack] segment #{} section={} offset={} words={} via={:?} text={:?}",
         segment.index, segment.section_index, position.offset, segment.words, position.method, preview,
     );
+    Some(position)
 }
 
 fn short_id(id: &str) -> &str {
