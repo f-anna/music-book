@@ -1,0 +1,31 @@
+{
+  "model": "Mitchins/literary-tone-classifier-v0.1",
+  "revision": "afbd525d443b1b04fda2eeeb64315533427857b9",
+  "max_tokens": 2048,
+  "threads": 4,
+  "load_s": 63.4,
+  "peak_rss_mb": 1328,
+  "torch": "2.14.1+cu130",
+  "transformers": "4.57.6",
+  "cpu": "x86_64",
+  "padding_check": [
+    {
+      "passage": "spouter_painting",
+      "max_abs_diff": 5.960464477539063e-08,
+      "ms_unpadded": 377,
+      "ms_padded": 5659
+    },
+    {
+      "passage": "squeeze",
+      "max_abs_diff": 5.960464477539063e-08,
+      "ms_unpadded": 364,
+      "ms_padded": 5355
+    },
+    {
+      "passage": "catastrophe",
+      "max_abs_diff": 1.7881393432617188e-07,
+      "ms_unpadded": 461,
+      "ms_padded": 5302
+    }
+  ]
+}

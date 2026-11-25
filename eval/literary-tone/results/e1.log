@@ -1,0 +1,125 @@
+/home/anna/.venvs/music-book-eval/lib/python3.12/site-packages/torch/jit/_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+loaded in 63.4s, rss 901 MB, labels ['dark', 'humorous', 'lyrical', 'melancholic', 'warm']
+loomings            150w   176tok    450ms  dark         dark=0.47 humo=0.39 lyri=0.03 mela=0.06 warm=0.05
+loomings            300w   370tok    461ms  humorous     dark=0.07 humo=0.84 lyri=0.02 mela=0.02 warm=0.05
+loomings            700w   873tok   1811ms  humorous     dark=0.04 humo=0.80 lyri=0.08 mela=0.01 warm=0.06
+loomings           1500w  1873tok   5118ms  humorous     dark=0.04 humo=0.90 lyri=0.02 mela=0.01 warm=0.03
+spouter_painting    150w   190tok    404ms  humorous     dark=0.10 humo=0.74 lyri=0.06 mela=0.03 warm=0.07
+spouter_painting    300w   404tok    434ms  humorous     dark=0.06 humo=0.86 lyri=0.03 mela=0.01 warm=0.03
+spouter_painting    700w   916tok   1220ms  humorous     dark=0.12 humo=0.83 lyri=0.03 mela=0.01 warm=0.02
+spouter_painting   1500w  1984tok   7471ms  humorous     dark=0.19 humo=0.76 lyri=0.02 mela=0.01 warm=0.02
+spouter_landlord    150w   198tok    208ms  dark         dark=0.34 humo=0.33 lyri=0.06 mela=0.12 warm=0.15
+spouter_landlord    300w   386tok    358ms  humorous     dark=0.32 humo=0.56 lyri=0.02 mela=0.04 warm=0.06
+spouter_landlord    700w   935tok   1282ms  humorous     dark=0.21 humo=0.73 lyri=0.01 mela=0.02 warm=0.02
+spouter_landlord   1500w  1934tok   4041ms  humorous     dark=0.15 humo=0.80 lyri=0.01 mela=0.01 warm=0.02
+sermon              150w   200tok    208ms  lyrical      dark=0.02 humo=0.07 lyri=0.75 mela=0.05 warm=0.11
+sermon              300w   388tok    348ms  lyrical      dark=0.08 humo=0.08 lyri=0.73 mela=0.06 warm=0.04
+sermon              700w   905tok   1229ms  humorous     dark=0.25 humo=0.34 lyri=0.32 mela=0.04 warm=0.04
+sermon             1500w  1981tok   4710ms  humorous     dark=0.32 humo=0.62 lyri=0.02 mela=0.02 warm=0.02
+bosom_friend        150w   188tok    177ms  humorous     dark=0.15 humo=0.64 lyri=0.06 mela=0.05 warm=0.11
+bosom_friend        300w   363tok    350ms  humorous     dark=0.11 humo=0.83 lyri=0.02 mela=0.01 warm=0.03
+bosom_friend        700w   847tok   1018ms  humorous     dark=0.03 humo=0.89 lyri=0.02 mela=0.01 warm=0.05
+bosom_friend       1500w  1820tok   3658ms  humorous     dark=0.03 humo=0.89 lyri=0.02 mela=0.01 warm=0.05
+cetology            150w   197tok    188ms  humorous     dark=0.12 humo=0.45 lyri=0.16 mela=0.08 warm=0.18
+cetology            300w   399tok    357ms  humorous     dark=0.09 humo=0.66 lyri=0.11 mela=0.04 warm=0.10
+cetology            700w   927tok   1154ms  humorous     dark=0.04 humo=0.87 lyri=0.04 mela=0.01 warm=0.04
+cetology           1500w  1968tok   4460ms  humorous     dark=0.04 humo=0.88 lyri=0.03 mela=0.01 warm=0.04
+sunset              150w   222tok    240ms  dark         dark=0.56 humo=0.23 lyri=0.08 mela=0.09 warm=0.04
+sunset              300w   438tok    431ms  humorous     dark=0.11 humo=0.78 lyri=0.05 mela=0.02 warm=0.04
+sunset              700w   996tok   1359ms  humorous     dark=0.25 humo=0.70 lyri=0.02 mela=0.02 warm=0.02
+sunset             1500w  2261tok   5125ms  humorous     dark=0.07 humo=0.88 lyri=0.02 mela=0.01 warm=0.02
+whiteness           150w   183tok    189ms  humorous     dark=0.12 humo=0.67 lyri=0.09 mela=0.04 warm=0.08
+whiteness           300w   374tok    371ms  humorous     dark=0.04 humo=0.82 lyri=0.07 mela=0.01 warm=0.06
+whiteness           700w   855tok   1098ms  humorous     dark=0.04 humo=0.85 lyri=0.06 mela=0.01 warm=0.04
+whiteness          1500w  1864tok   3865ms  humorous     dark=0.05 humo=0.84 lyri=0.06 mela=0.01 warm=0.04
+stubb_kills         150w   193tok    197ms  dark         dark=0.77 humo=0.14 lyri=0.02 mela=0.05 warm=0.02
+stubb_kills         300w   404tok    379ms  dark         dark=0.68 humo=0.26 lyri=0.01 mela=0.03 warm=0.02
+stubb_kills         700w   881tok   1066ms  humorous     dark=0.11 humo=0.84 lyri=0.02 mela=0.01 warm=0.03
+stubb_kills        1500w  1852tok   3838ms  humorous     dark=0.05 humo=0.89 lyri=0.02 mela=0.01 warm=0.03
+stubb_supper        150w   213tok    219ms  humorous     dark=0.16 humo=0.52 lyri=0.05 mela=0.06 warm=0.20
+stubb_supper        300w   441tok    419ms  humorous     dark=0.12 humo=0.79 lyri=0.02 mela=0.02 warm=0.06
+stubb_supper        700w  1061tok   1586ms  humorous     dark=0.06 humo=0.88 lyri=0.01 mela=0.01 warm=0.03
+stubb_supper       1500w  2297tok   5088ms  humorous     dark=0.12 humo=0.83 lyri=0.02 mela=0.01 warm=0.02
+castaway            150w   189tok    188ms  humorous     dark=0.08 humo=0.81 lyri=0.04 mela=0.02 warm=0.06
+castaway            300w   394tok    338ms  humorous     dark=0.03 humo=0.89 lyri=0.02 mela=0.01 warm=0.05
+castaway            700w   909tok   1056ms  humorous     dark=0.03 humo=0.90 lyri=0.02 mela=0.01 warm=0.04
+castaway           1500w  1953tok   4348ms  humorous     dark=0.04 humo=0.90 lyri=0.02 mela=0.01 warm=0.03
+squeeze             150w   192tok    216ms  humorous     dark=0.06 humo=0.68 lyri=0.05 mela=0.03 warm=0.18
+squeeze             300w   382tok    376ms  humorous     dark=0.02 humo=0.63 lyri=0.10 mela=0.02 warm=0.23
+squeeze             700w   896tok   1182ms  humorous     dark=0.02 humo=0.74 lyri=0.06 mela=0.01 warm=0.18
+squeeze            1500w  1932tok   4197ms  humorous     dark=0.03 humo=0.89 lyri=0.03 mela=0.01 warm=0.04
+coffin              150w   192tok    205ms  humorous     dark=0.34 humo=0.58 lyri=0.02 mela=0.03 warm=0.03
+coffin              300w   390tok    392ms  dark         dark=0.69 humo=0.23 lyri=0.01 mela=0.05 warm=0.02
+coffin              700w   884tok   1102ms  humorous     dark=0.07 humo=0.85 lyri=0.03 mela=0.01 warm=0.03
+coffin             1500w  1894tok   4083ms  humorous     dark=0.05 humo=0.88 lyri=0.02 mela=0.01 warm=0.04
+candles             150w   187tok    203ms  humorous     dark=0.06 humo=0.81 lyri=0.05 mela=0.02 warm=0.06
+candles             300w   382tok    372ms  humorous     dark=0.05 humo=0.88 lyri=0.02 mela=0.01 warm=0.04
+candles             700w   972tok   1329ms  humorous     dark=0.06 humo=0.87 lyri=0.03 mela=0.01 warm=0.03
+candles            1500w  2048tok   5768ms  humorous     dark=0.06 humo=0.87 lyri=0.03 mela=0.01 warm=0.03
+symphony            150w   209tok    227ms  lyrical      dark=0.01 humo=0.02 lyri=0.79 mela=0.03 warm=0.15
+symphony            300w   408tok    386ms  lyrical      dark=0.03 humo=0.23 lyri=0.57 mela=0.03 warm=0.15
+symphony            700w   940tok   1215ms  humorous     dark=0.02 humo=0.57 lyri=0.16 mela=0.02 warm=0.23
+symphony           1500w  2027tok   4755ms  humorous     dark=0.04 humo=0.89 lyri=0.02 mela=0.01 warm=0.04
+catastrophe         150w   198tok    198ms  humorous     dark=0.21 humo=0.62 lyri=0.05 mela=0.05 warm=0.07
+catastrophe         300w   414tok    396ms  humorous     dark=0.23 humo=0.70 lyri=0.02 mela=0.02 warm=0.03
+catastrophe         700w   977tok   1403ms  humorous     dark=0.04 humo=0.89 lyri=0.02 mela=0.01 warm=0.04
+catastrophe        1500w  2047tok   4994ms  humorous     dark=0.19 humo=0.75 lyri=0.03 mela=0.01 warm=0.02
+win  0 @    0w  humorous     dark=0.06 humo=0.86 lyri=0.03 mela=0.01 warm=0.03
+win  1 @  300w  humorous     dark=0.19 humo=0.75 lyri=0.02 mela=0.01 warm=0.02
+win  2 @  600w  dark         dark=0.51 humo=0.43 lyri=0.02 mela=0.03 warm=0.02
+win  3 @  900w  humorous     dark=0.18 humo=0.74 lyri=0.02 mela=0.02 warm=0.04
+win  4 @ 1200w  humorous     dark=0.38 humo=0.55 lyri=0.01 mela=0.02 warm=0.02
+win  5 @ 1500w  humorous     dark=0.06 humo=0.86 lyri=0.02 mela=0.01 warm=0.05
+win  6 @ 1800w  humorous     dark=0.22 humo=0.68 lyri=0.02 mela=0.03 warm=0.06
+win  7 @ 2100w  humorous     dark=0.20 humo=0.50 lyri=0.04 mela=0.06 warm=0.20
+win  8 @ 2400w  humorous     dark=0.20 humo=0.72 lyri=0.01 mela=0.02 warm=0.04
+win  9 @ 2700w  humorous     dark=0.27 humo=0.65 lyri=0.02 mela=0.03 warm=0.04
+win 10 @ 3000w  humorous     dark=0.30 humo=0.63 lyri=0.02 mela=0.02 warm=0.03
+win 11 @ 3300w  humorous     dark=0.10 humo=0.78 lyri=0.02 mela=0.02 warm=0.08
+win 12 @ 3600w  humorous     dark=0.30 humo=0.63 lyri=0.02 mela=0.03 warm=0.03
+win 13 @ 3900w  dark         dark=0.54 humo=0.39 lyri=0.01 mela=0.03 warm=0.03
+win 14 @ 4200w  humorous     dark=0.39 humo=0.54 lyri=0.02 mela=0.02 warm=0.03
+win 15 @ 4500w  dark         dark=0.65 humo=0.29 lyri=0.01 mela=0.03 warm=0.02
+win  0 @    0w  lyrical      dark=0.03 humo=0.23 lyri=0.57 mela=0.03 warm=0.15
+win  1 @  300w  humorous     dark=0.02 humo=0.73 lyri=0.06 mela=0.01 warm=0.17
+win  2 @  600w  dark         dark=0.67 humo=0.23 lyri=0.02 mela=0.07 warm=0.02
+win  3 @  900w  humorous     dark=0.03 humo=0.88 lyri=0.02 mela=0.01 warm=0.06
+win  4 @ 1200w  humorous     dark=0.07 humo=0.86 lyri=0.02 mela=0.01 warm=0.04
+win  5 @ 1500w  humorous     dark=0.11 humo=0.83 lyri=0.02 mela=0.01 warm=0.03
+win  6 @ 1800w  humorous     dark=0.06 humo=0.84 lyri=0.03 mela=0.01 warm=0.05
+win  7 @ 2100w  humorous     dark=0.05 humo=0.81 lyri=0.07 mela=0.01 warm=0.06
+pad {'passage': 'spouter_painting', 'max_abs_diff': 5.960464477539063e-08, 'ms_unpadded': 377, 'ms_padded': 5659}
+pad {'passage': 'squeeze', 'max_abs_diff': 5.960464477539063e-08, 'ms_unpadded': 364, 'ms_padded': 5355}
+pad {'passage': 'catastrophe', 'max_abs_diff': 1.7881393432617188e-07, 'ms_unpadded': 461, 'ms_padded': 5302}
+{
+  "model": "Mitchins/literary-tone-classifier-v0.1",
+  "revision": "afbd525d443b1b04fda2eeeb64315533427857b9",
+  "max_tokens": 2048,
+  "threads": 4,
+  "load_s": 63.4,
+  "peak_rss_mb": 1328,
+  "torch": "2.14.1+cu130",
+  "transformers": "4.57.6",
+  "cpu": "x86_64",
+  "padding_check": [
+    {
+      "passage": "spouter_painting",
+      "max_abs_diff": 5.960464477539063e-08,
+      "ms_unpadded": 377,
+      "ms_padded": 5659
+    },
+    {
+      "passage": "squeeze",
+      "max_abs_diff": 5.960464477539063e-08,
+      "ms_unpadded": 364,
+      "ms_padded": 5355
+    },
+    {
+      "passage": "catastrophe",
+      "max_abs_diff": 1.7881393432617188e-07,
+      "ms_unpadded": 461,
+      "ms_padded": 5302
+    }
+  ]
+}
