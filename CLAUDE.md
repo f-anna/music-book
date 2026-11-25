@@ -8,7 +8,7 @@ Egyetemi projekt. Egy e-book olvasóhoz készülő funkció, amely az olvasott s
 - **Saját backend:** Rust, egyetlen Tauri v2 pluginként (`tauri-plugin-soundtrack`).
 - **Saját frontend:** TypeScript/React csomagok (reader adapter, később UI).
 - **EPUB (backend):** `rbook` (konténer: spine, manifest, TOC, metadata) + `scraper` (XHTML → szöveg). Indoklás a 2. mérföldkőnél.
-- **Hangulatelemzés:** lokális LLM, **Qwen3-4B-Instruct-2507** (Q4_K_M GGUF) a **llama.cpp** `llama-server`-ével, külön folyamatként, OpenAI-kompatibilis HTTP API-n és JSON-séma korlátozással. Indoklás a 3. mérföldkőnél és az [`eval/qwen3-llamacpp/RESULTS.md`](eval/qwen3-llamacpp/RESULTS.md)-ben.
+- **Hangulatelemzés:** lokális LLM, **Qwen3-4B-Instruct-2507** (Q4_K_M GGUF) a **llama.cpp** `llama-server`-ével, külön folyamatként, OpenAI-kompatibilis HTTP API-n és JSON-séma korlátozással. **Felülvizsgálat alatt** (2026-11-25): a plugin-kód parkolva, helyette egy saját kis modell tanítása a terv, lásd „Jelenlegi állapot”. Indoklás a 3. mérföldkőnél és az [`eval/qwen3-llamacpp/RESULTS.md`](eval/qwen3-llamacpp/RESULTS.md)-ben.
 - **Audio:** még nyitott kérdés: Rust oldalon `kira` crate, vagy frontendben Web Audio API / Tone.js.
 
 ## Jelenlegi állapot
@@ -36,14 +36,17 @@ Egyetemi projekt. Egy e-book olvasóhoz készülő funkció, amely az olvasott s
 - [x] **Csúszka-fókusz javítása** (fork PR #5, `fix-scrubber-focus`), lásd „Ismert buktatók”.
 - [x] **2. mérföldkő kész** (fő repó PR #2, `open-book`; fork PR #6): `open_book`/`close_book`, `epub.rs`, Locator → szegmens, bekötve és az appban kipróbálva.
 - [x] **EPUB crate döntés** (2. mérföldkő eleje): `rbook` a konténerhez, `scraper` a szöveghez; a spine-indexelés egyezése a Foliate-tel kipróbálva.
-- [x] **Elemző modell döntés** (3. mérföldkő eleje): a feladatspecifikus enkóder modellek elvetve ([`eval/model-selection/RESULTS.md`](eval/model-selection/RESULTS.md)), helyettük Qwen3-4B-Instruct-2507 + llama.cpp, négy prompt-iteráció után ([`eval/qwen3-llamacpp/RESULTS.md`](eval/qwen3-llamacpp/RESULTS.md)). Plugin-kód még nincs hozzá.
+- [x] **Elemző modell döntés** (3. mérföldkő eleje): a feladatspecifikus enkóder modellek elvetve ([`eval/model-selection/RESULTS.md`](eval/model-selection/RESULTS.md)), helyettük Qwen3-4B-Instruct-2507 + llama.cpp, négy prompt-iteráció után ([`eval/qwen3-llamacpp/RESULTS.md`](eval/qwen3-llamacpp/RESULTS.md)).
+- [~] **A Qwen3-4B-es plugin-kód** (`analysis/`, `store.rs`, `worker.rs`) elkészült, de **parkolva** van a `mood-analysis` ágon (nincs mergelve): a modell a fejlesztői környezet mellett nem fér el a memóriában, és 1–3 perc szegmensenként. A Qwen3-1.7B gyorsabb, de a minősége nem elég (a jegyzőkönyv is azon az ágon van).
+- [x] **Enkóder modellek újra megvizsgálva** (ág: `literary-tone-eval`, külön mergelendő; 2026-11-04–19): E1 hangvétel-osztályozó ([`eval/literary-tone/RESULTS-E1.md`](eval/literary-tone/RESULTS-E1.md), negatív), E2 zero-shot ([`RESULTS-E2.md`](eval/literary-tone/RESULTS-E2.md)), mondatszintű pontozás hat modellel ([`RESULTS-SENT.md`](eval/literary-tone/RESULTS-SENT.md)): a **PERT-EmoPair (V, A) + EmoLit (T, tagek)** páros használható LLM nélküli alapvonal (kb. 24 s / szegmens), leave-one-out kalibrációval (`calibrate_loo.py`).
+- [ ] **Új irány (2026-11-25): saját kis modell tanítása** (MiniLM / ModernBERT) címkézett szegmenseken (ág: `labeling-dataset`). A címkéket feladatspecifikus enkóderek (vagy kombinációjuk) adják; a ChatGPT és a Claude **csak ellenőriz**, a kimenetük nem kerül a tanítóadatba (felhasználási feltételek, lásd [`eval/labeling/LABELING_GUIDE.md`](eval/labeling/LABELING_GUIDE.md)). A közös segédkód (mondatokra bontás, PERT/EmoLit, összesítés, metrikák) az [`eval/common/`](eval/common/)-ban van, a `literary-tone` kísérlet másolataként, hogy a címkézés ne függjön kísérleti mappától. Folyamatban: [`eval/calibration/`](eval/calibration/) (PERT + EmoLit kalibrálása a Qwen3-4B címkéihez hat könyvön; a 300 szegmensből eddig 2 van pontozva, a kézi címkék és a Qwen-címkék még hiányoznak).
 
 ## Félév scope (önlab)
 
 Négy lépés, végponttól végpontig működve:
 
 1. **Kontextus megszerzése:** olvasási pozíció és a hozzá tartozó szöveg (szegmens) a backendben.
-2. **Elemzés:** a szegmens szövegének elemzése **kész nyelvi modellel** (saját modell tanítása nincs a scope-ban).
+2. **Elemzés:** a szegmens szövegének elemzése **kész nyelvi modellel** (saját modell tanítása eredetileg nem volt a scope-ban; 2026-11-25 óta a terv egy kis modell tanítása kész modellek címkéin, lásd „Jelenlegi állapot”).
 3. **Strukturált kimenet:** fix sémájú, validált JSON (`MoodAnalysis`, lásd lent), SQLite-ban cache-elve.
 4. **Zenei rétegek vezérlése:** a strukturált kimenetből leképezés a stemek hangerejére, alap simítással.
 
@@ -216,7 +219,11 @@ music-book/
 │   └── adapter-foliate/               # foliate-view relocate → Locator  ✔ kész
 ├── eval/                              # modellválasztási jegyzőkönyvek (nem része a buildnek)
 │   ├── model-selection/RESULTS.md     # enkóder modellek, elvetve (a szkriptek törölve)
-│   └── qwen3-llamacpp/                # Qwen3-4B + llama.cpp: RESULTS.md, llm_probe.py, logs/
+│   ├── qwen3-llamacpp/                # Qwen3-4B + llama.cpp: RESULTS.md, llm_probe.py, logs/
+│   ├── literary-tone/                 # E1, E2, mondatszintű enkóderek (a `literary-tone-eval` ágon)
+│   ├── common/                        # közös segédkód a címkéző szkriptekhez
+│   ├── calibration/                   # PERT + EmoLit kalibrálása több könyvön (folyamatban)
+│   └── labeling/                      # LABELING_GUIDE.md: a tanító adathalmaz terve
 └── hosts/
     └── folioreader/                   # git submodule (f-anna/folioreader-study-project, main)  ✔ kész
 ```
@@ -343,7 +350,7 @@ Cél: lapozás → adapter → plugin command → a Rust terminálban megjelenik
 ## Nyitott kérdések
 
 - Hol szól a zene: Rust (`kira`) vagy frontend (Web Audio)? Android WebView audio megbízhatósága?
-- ~~Melyik kész modell legyen?~~ **Eldőlt:** Qwen3-4B-Instruct-2507 + llama.cpp (lásd a 3. mérföldkövet). Nyitott maradt: hogyan induljon a `llama-server` az app mellett (Tauri sidecar?), és mi legyen Androidon (ott egy 4B-s modell valószínűleg túl nagy).
+- ~~Melyik kész modell legyen?~~ **Eldőlt:** Qwen3-4B-Instruct-2507 + llama.cpp (lásd a 3. mérföldkövet). **Újra nyitott (2026-11-25):** a 4B az appban túl lassú és túl nagy; a terv egy saját kis modell (lásd „Jelenlegi állapot”). Ha mégis az LLM marad, nyitott: hogyan induljon a `llama-server` az app mellett (Tauri sidecar?), és mi legyen Androidon (ott egy 4B-s modell valószínűleg túl nagy).
 - Honnan lesznek a stemek, és milyen licenccel?
 
 ## Ismert buktatók
