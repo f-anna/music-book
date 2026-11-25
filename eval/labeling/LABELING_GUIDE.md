@@ -132,9 +132,14 @@ Each author is in only one split, so the test also measures generalisation to un
   [`../common/sentences.py`](../common/sentences.py), applied per paragraph. Take paragraphs from
   block elements, not from line breaks: the Gutenberg XHTML breaks lines inside `<p>`.
 - **How many:**
-  - train books: ~100–150 segments each, spread evenly (~3,000 in total);
-  - gold set: ~100 segments from the validation books and ~150 from the test books.
-- **ID per segment:** `<gutenberg_id>:<section_index>:<seg_index>`, plus byte offsets.
+  - train books: 120 segments each (all, if fewer), spread evenly (~2,800 in total);
+  - validation and test books: every eligible segment; ~100 (validation) and ~150 (test) of
+    them are the gold set.
+- **ID per segment:** `<book key>-<seg_index>` (e.g. `dracula-0042`), where `seg_index` is the
+  plugin's segment index in that book, so a label can be matched to the plugin's segment `#N`.
+- **Implemented in** [`segment.py`](segment.py) and [`books.py`](books.py), run from
+  [`labeling.ipynb`](labeling.ipynb). Checked: on Moby Dick it gives the plugin's 347 segments
+  and 215,845 words.
 
 ---
 
@@ -171,7 +176,13 @@ Each author is in only one split, so the test also measures generalisation to un
     the generic `id2label`;
   - max 256 tokens per sentence;
   - it was trained on Gemma-labelled Gutenberg sentences, which may include our test books.
-- **sentiment-fiction-seq:** 3-class softmax, valence = `p(pos) − p(neg)`, max 512 tokens.
+- **sentiment-fiction-seq:** 3-class softmax, valence = `p(pos) − p(neg)`, max 512 tokens. Its
+  outputs are overconfident (single sentences often get ±0.9 or more); the card names no
+  calibration, and says the plain sentiment-fiction "may be preferable" for single sentences.
+  Rank-based aggregates and Spearman are barely affected.
+- **literary-bert, observed (2026-11-25):** the trained thresholds of the top levels are huge
+  (logits 7–9 around −10²²), so levels 8–10 are unreachable and the score effectively spans
+  ~1–8. A property of the model, not of our code (same numbers as the repo's own class).
 
 ---
 
@@ -406,8 +417,8 @@ check them in validation instead.
 4. **Output** (JSONL, one line per segment; texts separately in `segments.jsonl`):
 
 ```json
-{"segment_id": "345:12:3", "split": "train", "gutenberg_id": 345, "section_index": 12,
- "seg_index": 3, "start": 10423, "end": 14980, "words": 702, "sentences": 31,
+{"segment_id": "dracula-0042", "split": "train", "book": "dracula", "section": 12,
+ "seg_index": 42, "words": 702, "sentences": 31,
  "labeller": "C2", "models": {"pert": "<revision>", "emolit": "<revision>", "literary-bert-en-base": "<revision>"},
  "label": {"valence": 2.4, "arousal": 3.1, "tension": 3.8,
            "tags": {"ominous": 0.71, "suspense": 0.55, "fear": 0.40}},

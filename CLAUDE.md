@@ -39,7 +39,7 @@ Egyetemi projekt. Egy e-book olvasóhoz készülő funkció, amely az olvasott s
 - [x] **Elemző modell döntés** (3. mérföldkő eleje): a feladatspecifikus enkóder modellek elvetve ([`eval/model-selection/RESULTS.md`](eval/model-selection/RESULTS.md)), helyettük Qwen3-4B-Instruct-2507 + llama.cpp, négy prompt-iteráció után ([`eval/qwen3-llamacpp/RESULTS.md`](eval/qwen3-llamacpp/RESULTS.md)).
 - [~] **A Qwen3-4B-es plugin-kód** (`analysis/`, `store.rs`, `worker.rs`) elkészült, de **parkolva** van a `mood-analysis` ágon (nincs mergelve): a modell a fejlesztői környezet mellett nem fér el a memóriában, és 1–3 perc szegmensenként. A Qwen3-1.7B gyorsabb, de a minősége nem elég (a jegyzőkönyv is azon az ágon van).
 - [x] **Enkóder modellek újra megvizsgálva** (ág: `literary-tone-eval`, külön mergelendő; 2026-11-04–19): E1 hangvétel-osztályozó ([`eval/literary-tone/RESULTS-E1.md`](eval/literary-tone/RESULTS-E1.md), negatív), E2 zero-shot ([`RESULTS-E2.md`](eval/literary-tone/RESULTS-E2.md)), mondatszintű pontozás hat modellel ([`RESULTS-SENT.md`](eval/literary-tone/RESULTS-SENT.md)): a **PERT-EmoPair (V, A) + EmoLit (T, tagek)** páros használható LLM nélküli alapvonal (kb. 24 s / szegmens), leave-one-out kalibrációval (`calibrate_loo.py`).
-- [ ] **Új irány (2026-11-25): saját kis modell tanítása** (MiniLM / ModernBERT) címkézett szegmenseken (ág: `labeling-dataset`). A címkéket feladatspecifikus enkóderek (vagy kombinációjuk) adják; a ChatGPT és a Claude **csak ellenőriz**, a kimenetük nem kerül a tanítóadatba (felhasználási feltételek, lásd [`eval/labeling/LABELING_GUIDE.md`](eval/labeling/LABELING_GUIDE.md)). A közös segédkód (mondatokra bontás, PERT/EmoLit, összesítés, metrikák) az [`eval/common/`](eval/common/)-ban van, a `literary-tone` kísérlet másolataként, hogy a címkézés ne függjön kísérleti mappától. Folyamatban: [`eval/calibration/`](eval/calibration/) (PERT + EmoLit kalibrálása a Qwen3-4B címkéihez hat könyvön; a 300 szegmensből eddig 2 van pontozva, a kézi címkék és a Qwen-címkék még hiányoznak).
+- [ ] **Új irány (2026-11-25): saját kis modell tanítása** (MiniLM / ModernBERT) címkézett szegmenseken (ág: `labeling-dataset`). A címkéket feladatspecifikus enkóderek (vagy kombinációjuk) adják; a ChatGPT és a Claude **csak ellenőriz**, a kimenetük nem kerül a tanítóadatba (felhasználási feltételek, lásd [`eval/labeling/LABELING_GUIDE.md`](eval/labeling/LABELING_GUIDE.md)). A közös segédkód (mondatokra bontás, PERT/EmoLit, összesítés, metrikák) az [`eval/common/`](eval/common/)-ban van, a `literary-tone` kísérlet másolataként, hogy a címkézés ne függjön kísérleti mappától. Folyamatban (a terv 1–2. lépése): [`eval/labeling/labeling.ipynb`](eval/labeling/labeling.ipynb) (31 Gutenberg-könyv letöltése címellenőrzéssel, szegmentálás a plugin szabályaival – a Moby Dicken egyezik: 347 szegmens, 215 845 szó –, a gold set kijelölése, majd öt enkóder mondatonkénti pontozása a háttérben). A korábbi [`eval/calibration/`](eval/calibration/) teszt ebbe olvadt; a szkript csak referenciaként maradt, az adatai törölve.
 
 ## Félév scope (önlab)
 
@@ -222,8 +222,8 @@ music-book/
 │   ├── qwen3-llamacpp/                # Qwen3-4B + llama.cpp: RESULTS.md, llm_probe.py, logs/
 │   ├── literary-tone/                 # E1, E2, mondatszintű enkóderek (a `literary-tone-eval` ágon)
 │   ├── common/                        # közös segédkód a címkéző szkriptekhez
-│   ├── calibration/                   # PERT + EmoLit kalibrálása több könyvön (folyamatban)
-│   └── labeling/                      # LABELING_GUIDE.md: a tanító adathalmaz terve
+│   ├── calibration/                   # PERT + EmoLit kalibráció, felváltotta a labeling/ (csak a szkript)
+│   └── labeling/                      # LABELING_GUIDE.md, labeling.ipynb, books/segment/score.py, data/
 └── hosts/
     └── folioreader/                   # git submodule (f-anna/folioreader-study-project, main)  ✔ kész
 ```
