@@ -1,0 +1,15 @@
+{
+  "model": "RobroKools/vad-bert",
+  "revision": "c4c659fd17dd5807572b3f0f577de8c408401ca7",
+  "threads": 4,
+  "load_s": 1.2,
+  "peak_rss_mb": 1250,
+  "passage_s": 34.93,
+  "passage_words": 11524,
+  "passage_sentences": 496,
+  "s_per_1000_words": 3.03,
+  "truncated_items": 5,
+  "torch": "2.14.1+cu130",
+  "transformers": "4.57.6",
+  "cpu": "x86_64"
+}

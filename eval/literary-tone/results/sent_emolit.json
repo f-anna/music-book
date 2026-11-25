@@ -1,0 +1,15 @@
+{
+  "model": "lrei/roberta-large-emolit",
+  "revision": "5609a7f6108ccb82ec93eb26d026682bb70b67a6",
+  "threads": 4,
+  "load_s": 84.9,
+  "peak_rss_mb": 2162,
+  "passage_s": 146.96,
+  "passage_words": 11524,
+  "passage_sentences": 496,
+  "s_per_1000_words": 12.75,
+  "truncated_items": 1,
+  "torch": "2.14.1+cu130",
+  "transformers": "4.57.6",
+  "cpu": "x86_64"
+}

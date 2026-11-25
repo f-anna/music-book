@@ -1,0 +1,126 @@
+[goemotions] loaded in 3.6s, rss 631 MB
+[goemotions] passage loomings                         41 items    3.7s
+[goemotions] passage spouter_painting                 25 items    1.6s
+[goemotions] passage spouter_landlord                 39 items    1.9s
+[goemotions] passage sermon                           32 items    1.8s
+[goemotions] passage bosom_friend                     26 items    1.7s
+[goemotions] passage cetology                         38 items    1.8s
+[goemotions] passage sunset                           54 items    2.2s
+Token indices sequence length is longer than the specified maximum sequence length for this model (615 > 512). Running this sequence through the model will result in indexing errors
+[goemotions] passage whiteness                        10 items    5.5s
+[goemotions] passage stubb_kills                      21 items    1.6s
+[goemotions] passage stubb_supper                     40 items    2.4s
+[goemotions] passage castaway                         20 items    1.9s
+[goemotions] passage squeeze                          21 items    2.2s
+[goemotions] passage coffin                           20 items    1.7s
+[goemotions] passage candles                          33 items    1.8s
+[goemotions] passage symphony                         27 items    2.2s
+[goemotions] passage catastrophe                      49 items    2.3s
+[goemotions] window  CHAPTER 3. The Spouter-Inn.     205 items   10.3s
+[goemotions] window  CHAPTER 132. The Symphony.      125 items    5.5s
+[goemotions] chunk   loomings                          3 items    1.4s
+[goemotions] chunk   spouter_painting                  3 items    1.5s
+[goemotions] chunk   spouter_landlord                  3 items    1.7s
+[goemotions] chunk   sermon                            3 items    1.7s
+[goemotions] chunk   bosom_friend                      3 items    1.5s
+[goemotions] chunk   cetology                          3 items    1.8s
+[goemotions] chunk   sunset                            3 items    1.6s
+[goemotions] chunk   whiteness                         2 items    1.2s
+[goemotions] chunk   stubb_kills                       3 items    1.6s
+[goemotions] chunk   stubb_supper                      3 items    1.7s
+[goemotions] chunk   castaway                          2 items    1.2s
+[goemotions] chunk   squeeze                           3 items    1.6s
+[goemotions] chunk   coffin                            3 items    1.4s
+[goemotions] chunk   candles                           3 items    1.7s
+[goemotions] chunk   symphony                          3 items    1.6s
+[goemotions] chunk   catastrophe                       3 items    1.8s
+[goemotions] done: {"load_s": 3.6, "peak_rss_mb": 1185, "s_per_1000_words": 3.17, "truncated_items": 6}
+[fiction] loaded in 71.3s, rss 735 MB
+[fiction] passage loomings                         41 items    7.7s
+[fiction] passage spouter_painting                 25 items    5.3s
+[fiction] passage spouter_landlord                 39 items    6.3s
+[fiction] passage sermon                           32 items    5.7s
+[fiction] passage bosom_friend                     26 items    5.4s
+[fiction] passage cetology                         38 items    5.9s
+[fiction] passage sunset                           54 items    7.2s
+Token indices sequence length is longer than the specified maximum sequence length for this model (615 > 512). Running this sequence through the model will result in indexing errors
+[fiction] passage whiteness                        10 items   37.4s
+[fiction] passage stubb_kills                      21 items    8.3s
+[fiction] passage stubb_supper                     40 items    7.6s
+[fiction] passage castaway                         20 items    6.5s
+[fiction] passage squeeze                          21 items    7.3s
+[fiction] passage coffin                           20 items    5.6s
+[fiction] passage candles                          33 items    7.4s
+[fiction] passage symphony                         27 items    7.6s
+[fiction] passage catastrophe                      49 items    7.6s
+[fiction] window  CHAPTER 3. The Spouter-Inn.     205 items   35.0s
+[fiction] window  CHAPTER 132. The Symphony.      125 items   18.9s
+Invalid model-index. Not loading eval results into CardData.
+[fiction] done: {"load_s": 71.3, "peak_rss_mb": 1998, "s_per_1000_words": 12.05, "truncated_items": 1}
+[pert] loaded in 78.0s, rss 2178 MB
+[pert] passage loomings                         41 items   16.7s
+[pert] passage spouter_painting                 25 items   10.3s
+[pert] passage spouter_landlord                 39 items   15.8s
+[pert] passage sermon                           32 items   23.5s
+[pert] passage bosom_friend                     26 items   10.8s
+[pert] passage cetology                         38 items   13.9s
+[pert] passage sunset                           54 items   27.9s
+Token indices sequence length is longer than the specified maximum sequence length for this model (613 > 512). Running this sequence through the model will result in indexing errors
+[pert] passage whiteness                        10 items    8.8s
+[pert] passage stubb_kills                      21 items   10.0s
+[pert] passage stubb_supper                     40 items   17.4s
+[pert] passage castaway                         20 items   11.4s
+[pert] passage squeeze                          21 items   11.6s
+[pert] passage coffin                           20 items   10.1s
+[pert] passage candles                          33 items   13.1s
+[pert] passage symphony                         27 items   13.4s
+[pert] passage catastrophe                      49 items   17.9s
+[pert] window  CHAPTER 3. The Spouter-Inn.     205 items   88.1s
+[pert] window  CHAPTER 132. The Symphony.      125 items   64.1s
+Invalid model-index. Not loading eval results into CardData.
+[pert] done: {"load_s": 78.0, "peak_rss_mb": 2234, "s_per_1000_words": 20.2, "truncated_items": 2}
+[emolit] loaded in 84.9s, rss 770 MB
+[emolit] passage loomings                         41 items    8.7s
+[emolit] passage spouter_painting                 25 items    5.5s
+[emolit] passage spouter_landlord                 39 items    6.4s
+[emolit] passage sermon                           32 items    5.7s
+[emolit] passage bosom_friend                     26 items    5.5s
+[emolit] passage cetology                         38 items    6.3s
+[emolit] passage sunset                           54 items   15.2s
+Token indices sequence length is longer than the specified maximum sequence length for this model (615 > 512). Running this sequence through the model will result in indexing errors
+[emolit] passage whiteness                        10 items   25.2s
+[emolit] passage stubb_kills                      21 items    6.3s
+[emolit] passage stubb_supper                     40 items    8.7s
+[emolit] passage castaway                         20 items    6.5s
+[emolit] passage squeeze                          21 items    7.5s
+[emolit] passage coffin                           20 items    6.5s
+[emolit] passage candles                          33 items   17.6s
+[emolit] passage symphony                         27 items    7.9s
+[emolit] passage catastrophe                      49 items    7.6s
+[emolit] window  CHAPTER 3. The Spouter-Inn.     205 items   37.3s
+[emolit] window  CHAPTER 132. The Symphony.      125 items   19.3s
+[emolit] done: {"load_s": 84.9, "peak_rss_mb": 2162, "s_per_1000_words": 12.75, "truncated_items": 1}
+/home/anna/.venvs/music-book-eval/lib/python3.12/site-packages/torch/jit/_script.py:1491: FutureWarning: `torch.jit.script` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+[stories] loaded in 134.7s, rss 851 MB
+You're using a DebertaV2TokenizerFast tokenizer. Please note that with a fast tokenizer, using the `__call__` method is faster than using a method to encode the text followed by a call to the `pad` method to get a padded encoding.
+[stories] passage loomings                         41 items  104.8s
+[stories] passage spouter_painting                 25 items   51.5s
+[stories] passage spouter_landlord                 39 items   59.6s
+[stories] passage sermon                           32 items   63.4s
+[stories] passage bosom_friend                     26 items   43.4s
+[stories] passage cetology                         38 items  167.7s
+[stories] passage sunset                           54 items  193.9s
+[stories] passage whiteness                        10 items  160.9s
+[stories] passage stubb_kills                      21 items   57.3s
+[stories] passage stubb_supper                     40 items   57.4s
+[stories] passage castaway                         20 items   58.5s
+[stories] passage squeeze                          21 items   99.3s
+[stories] passage coffin                           20 items   84.1s
+[stories] passage candles                          33 items   53.5s
+[stories] passage symphony                         27 items   50.4s
+[stories] passage catastrophe                      49 items   48.9s
+[stories] window  CHAPTER 3. The Spouter-Inn.     205 items  629.6s
+[stories] window  CHAPTER 132. The Symphony.      125 items  228.4s
+[stories] done: {"load_s": 134.7, "peak_rss_mb": 2018, "s_per_1000_words": 117.54, "truncated_items": 4}
+failed: none

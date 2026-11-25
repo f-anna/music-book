@@ -1,0 +1,15 @@
+{
+  "model": "SamLowe/roberta-base-go_emotions",
+  "revision": "d75048347613a25d77de8cf6412eaae9fa7b26be",
+  "threads": 4,
+  "load_s": 3.6,
+  "peak_rss_mb": 1185,
+  "passage_s": 36.49,
+  "passage_words": 11524,
+  "passage_sentences": 496,
+  "s_per_1000_words": 3.17,
+  "truncated_items": 6,
+  "torch": "2.14.1+cu130",
+  "transformers": "4.57.6",
+  "cpu": "x86_64"
+}

@@ -1,0 +1,17 @@
+{
+  "model": "edsi-umd/PERT-EmoPair",
+  "revision": "f8ff78b70b737b73b0f2e16378abf6c64e1431ba",
+  "threads": 4,
+  "load_s": 78.0,
+  "peak_rss_mb": 2234,
+  "passage_s": 232.77,
+  "passage_words": 11524,
+  "passage_sentences": 496,
+  "s_per_1000_words": 20.2,
+  "truncated_items": 2,
+  "torch": "2.14.1+cu130",
+  "transformers": "4.57.6",
+  "cpu": "x86_64",
+  "missing_keys": [],
+  "unexpected_keys": []
+}
