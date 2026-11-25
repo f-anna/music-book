@@ -1,0 +1,95 @@
+{
+  "source": "eval/literary-tone/results/sent_{pert,emolit}.csv (SENT, 2026-11-18, literary-tone-eval branch)",
+  "pert_revision": "f8ff78b70b737b73b0f2e16378abf6c64e1431ba",
+  "tolerance": 0.002,
+  "sentences": [
+    {
+      "text": "Let the most absent-minded of men be plunged in his deepest reveries—stand that man on his legs, set his feet a-going, and he will infallibly lead you to water, if water there be in all that region.",
+      "pert": {
+        "V": 3.10359,
+        "A": 0.20502,
+        "D": 0.39934
+      },
+      "emolit": {
+        "T": 0.28635
+      }
+    },
+    {
+      "text": "He never eats dumplings, he don’t—he eats nothing but steaks, and he likes ’em rare.”",
+      "pert": {
+        "V": 3.03698,
+        "A": 0.18177,
+        "D": 0.33586
+      },
+      "emolit": {
+        "T": 0.25404
+      }
+    },
+    {
+      "text": "He looked like a man who had never cringed and never had had a creditor.",
+      "pert": {
+        "V": 2.95294,
+        "A": -0.08371,
+        "D": -0.00015
+      },
+      "emolit": {
+        "T": 0.26483
+      }
+    },
+    {
+      "text": "The envious billows sidelong swell to whelm my track; let them; but first I pass.",
+      "pert": {
+        "V": 3.02068,
+        "A": 0.03834,
+        "D": 0.03669
+      },
+      "emolit": {
+        "T": 0.31201
+      }
+    },
+    {
+      "text": "Witness the white bear of the poles, and the white shark of the tropics; what but their smooth, flaky whiteness makes them the transcendent horrors they are?",
+      "pert": {
+        "V": 2.80263,
+        "A": 0.56657,
+        "D": 0.23471
+      },
+      "emolit": {
+        "T": 0.30695
+      }
+    },
+    {
+      "text": "“Now, cook,” said Stubb, resuming his supper at the capstan; “stand just where you stood before, there, over against me, and pay particular attention.”",
+      "pert": {
+        "V": 3.04828,
+        "A": -0.07992,
+        "D": 0.34394
+      },
+      "emolit": {
+        "T": 0.22772
+      }
+    },
+    {
+      "text": "Skies the most effulgent but basket the deadliest thunders: gorgeous Cuba knows tornadoes that never swept tame northern lands.",
+      "pert": {
+        "V": 2.9988,
+        "A": 0.47638,
+        "D": 0.12846
+      },
+      "emolit": {
+        "T": 0.26778
+      }
+    },
+    {
+      "text": "When I think of this life I have led; the desolation of solitude it has been; the masoned, walled-town of a Captain’s exclusiveness, which admits but small entrance to any sympathy from the green country without—oh, weariness! heaviness!",
+      "pert": {
+        "V": 2.41969,
+        "A": 0.40093,
+        "D": -0.42337
+      },
+      "emolit": {
+        "T": 0.27029
+      }
+    }
+  ]
+}
